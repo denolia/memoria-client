@@ -8,6 +8,7 @@ interface ItemsContext {
   items: Item[];
   loading: boolean;
   getAllItems: () => void;
+  // eslint-disable-next-line no-unused-vars
   updateItem: (b: Item) => Promise<boolean>;
 }
 
@@ -34,6 +35,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const updateItem = async (newItem: Item) =>
     // const res = await requestUpdateItem(newItem, user?.jwt);
     //
@@ -61,6 +63,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     //   };
     // });
     true;
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = { ...state, updateItem, getAllItems };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

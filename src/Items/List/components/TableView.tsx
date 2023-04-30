@@ -1,20 +1,18 @@
-import Box from "@mui/material/Box";
 import AddIcon from "@mui/icons-material/Add";
+// import { Stack } from "@mui/material";
+import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import type { DropResult } from "react-beautiful-dnd";
+import DraggableList from "../../../DragDrop/DraggableList";
+import { reorder } from "../../../helpers/helpers";
 import { useItems } from "../../state/ItemContext";
-import type { Item } from "../../types";
-import { ItemTableRow } from "./ItemTableRow";
+// import type { Item } from "../../types";
+// import { ItemTableRow } from "./ItemTableRow";
 
 const fabStyle = {
   position: "absolute",
@@ -23,7 +21,8 @@ const fabStyle = {
 };
 
 export function TableView() {
-  const { items } = useItems();
+  const { items: fetchedItems } = useItems();
+  const [items, setItems] = useState(fetchedItems);
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -31,16 +30,29 @@ export function TableView() {
     navigate("/create");
   };
 
+  const onDragEnd = ({ destination, source }: DropResult) => {
+    // dropped outside the list
+    if (!destination) return;
+
+    const newItems = reorder(items, source.index, destination.index);
+
+    setItems(newItems);
+  };
+
   return (
     <>
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
         My items
       </Typography>
-
+      <Paper>
+        <DraggableList items={items} onDragEnd={onDragEnd} />
+      </Paper>
       <Box sx={{ m: 3 }}>
-        {items.map((item: Item) => (
-          <ItemTableRow item={item} key={item.id} />
-        ))}
+        {/* <Stack spacing={2}> */}
+        {/*   {items.map((item: Item) => ( */}
+        {/*     <ItemTableRow item={item} key={item.id} /> */}
+        {/*   ))} */}
+        {/* </Stack> */}
 
         {/* <TableContainer component={Paper}> */}
         {/*  <Table aria-label="simple table"> */}

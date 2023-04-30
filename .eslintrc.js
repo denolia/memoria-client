@@ -42,6 +42,8 @@ module.exports = {
         tsx: "never",
       },
     ],
+    "react/jsx-no-bind": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       "error",
