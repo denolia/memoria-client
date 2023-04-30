@@ -1,10 +1,16 @@
 import React from "react";
-
-import type { Foo } from "./Foo"; // testing consistent type imports
+import { BrowserRouter } from "react-router-dom";
+import { AppRoutes } from "./AppRoutes";
+import { ItemsProvider } from "./Items/state/ItemContext";
 
 export function App() {
-  const foo: Foo = "asdf";
-  console.log(foo); // needed to test eslint warnings
-
-  return <div>Hello</div>;
+  return (
+    <div>
+      <BrowserRouter>
+        <ItemsProvider>
+          <AppRoutes />
+        </ItemsProvider>
+      </BrowserRouter>
+    </div>
+  );
 }

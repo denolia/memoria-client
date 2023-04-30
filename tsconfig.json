@@ -19,10 +19,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "types": ["node"],
-    "typeRoots": ["./src/types"],
-    "paths": {
-      "@app/*": ["src/*"]
-    }
+    "typeRoots": ["./src/types"]
   },
   "include": ["**/*.ts", "**/*.tsx", "node_modules/@types/jest/index.d.ts"]
 }
