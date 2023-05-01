@@ -7,9 +7,9 @@
     "build:vite": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest --colors --testTimeout=100000",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src/ --config .eslintrc.js",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src --config .eslintrc.js",
     "lint:fix": "yarn lint --fix",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format": "prettier --write \"{src,mock_server}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "prepare": "husky install"
   },
   "engines": {

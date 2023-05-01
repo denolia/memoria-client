@@ -36,25 +36,28 @@ export function TableView() {
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
         My items
       </Typography>
+
       <Box sx={{ m: 3 }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Author</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell align="right">Progress</TableCell>
-                <TableCell> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.map((item: Item) => (
-                <ItemTableRow item={item} key={item.id} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {items.map((item: Item) => (
+          <ItemTableRow item={item} key={item.id} />
+        ))}
+
+        {/* <TableContainer component={Paper}> */}
+        {/*  <Table aria-label="simple table"> */}
+        {/*    <TableHead> */}
+        {/*      <TableRow> */}
+        {/*        <TableCell>Title</TableCell> */}
+        {/*        <TableCell>Author</TableCell> */}
+        {/*        <TableCell>Description</TableCell> */}
+        {/*        <TableCell align="right">Progress</TableCell> */}
+        {/*        <TableCell> </TableCell> */}
+        {/*      </TableRow> */}
+        {/*    </TableHead> */}
+        {/*    <TableBody> */}
+        {/*      */}
+        {/*    </TableBody> */}
+        {/*  </Table> */}
+        {/* </TableContainer> */}
       </Box>
 
       <Fab color="success" aria-label="add" sx={fabStyle}>
