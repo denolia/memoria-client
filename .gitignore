@@ -1,6 +1,7 @@
 
 # dependencies
 /node_modules
+/mock_server/node_modules
 
 # testing
 /coverage
