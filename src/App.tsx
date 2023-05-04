@@ -39,6 +39,7 @@ export class App extends React.Component {
 
   onDragEnd = (result) => {
     console.log("onDragEnd", result);
+    document.body.style.color = "inherit";
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
@@ -67,9 +68,25 @@ export class App extends React.Component {
     this.setState(newState);
   };
 
+  onDragStart = (result) => {
+    console.log("onDragStart", result);
+    document.body.style.color = "orange";
+    document.body.style.transition = "background-color 0.2s ease";
+  };
+
+  onDragUpdate = (result) => {
+    const { destination } = result;
+    const opacity = destination ? destination.index / Object.keys(this.state.tasks).length : 0;
+    document.body.style.backgroundColor = `rgba(153, 141, 217, ${opacity})`;
+  };
+
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext
+        onDragStart={this.onDragStart}
+        onDragUpdate={this.onDragUpdate}
+        onDragEnd={this.onDragEnd}
+      >
         {this.state.columnOrder.map((columnId) => {
           const column = this.state.columns[columnId];
           const tasks = column.taskIds.map((taskId) => this.state.tasks[taskId]);
