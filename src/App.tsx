@@ -1,5 +1,5 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import { Column } from "./Column";
 
 // export function App() {
@@ -31,23 +31,6 @@ const initialData = {
   columnOrder: ["column-1"],
 };
 
-// function Task({ task, index }) {
-//   return (
-//     <Draggable draggableId={task.id} index={index}>
-//       {(provided) => (
-//         <div
-//           {...provided.draggableProps}
-//           {...provided.dragHandleProps}
-//           innerRef={provided.innerRef}
-//           style={{ border: "1px solid gray" }}
-//         >
-//           {task.content}
-//         </div>
-//       )}
-//     </Draggable>
-//   );
-// }
-
 export class App extends React.Component {
   constructor(props) {
     super(props);
@@ -56,6 +39,32 @@ export class App extends React.Component {
 
   onDragEnd = (result) => {
     console.log("onDragEnd", result);
+    const { destination, source, draggableId } = result;
+
+    if (!destination) return;
+
+    if (destination.droppableId === source.droppableId && destination.index === source.index)
+      return;
+
+    const column = this.state.columns[source.droppableId];
+    const newTaskIds = Array.from(column.taskIds);
+    newTaskIds.splice(source.index, 1);
+    newTaskIds.splice(destination.index, 0, draggableId);
+
+    const newColumn = {
+      ...column,
+      taskIds: newTaskIds,
+    };
+
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        [newColumn.id]: newColumn,
+      },
+    };
+
+    this.setState(newState);
   };
 
   render() {
@@ -69,12 +78,5 @@ export class App extends React.Component {
         })}
       </DragDropContext>
     );
-    //   {this.state.columnOrder.map((columnId) => {
-    //     const column = state.columns[columnId];
-    //     const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
-    //
-    //     return <Column column={column} tasks={tasks} />;
-    //   })}
-    //
   }
 }
