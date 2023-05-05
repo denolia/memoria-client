@@ -1,6 +1,6 @@
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import React from "react";
 import styled from "styled-components";
-import { Draggable, Droppable } from "@hello-pangea/dnd";
 import Task from "./Task";
 
 const Container = styled.div`
@@ -23,31 +23,28 @@ const TaskList = styled.div`
   min-height: 100px;
 `;
 
-export class Column extends React.Component<{ tasks: any; column: any; index: number }> {
-  render() {
-    const { tasks, column } = this.props;
-    return (
-      <Draggable draggableId={this.props.column.id} index={this.props.index}>
-        {(provided) => (
-          <Container {...provided.draggableProps} ref={provided.innerRef}>
-            <Title {...provided.dragHandleProps}>{column.title}</Title>
-            <Droppable droppableId={column.id}>
-              {(provided, snapshot) => (
-                <TaskList
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  {this.props.tasks.map((task, index) => (
-                    <Task key={task.id} task={task} index={index} />
-                  ))}
-                  {provided.placeholder}
-                </TaskList>
-              )}
-            </Droppable>
-          </Container>
-        )}
-      </Draggable>
-    );
-  }
+export function Column({ column, index, tasks }: { tasks: any; column: any; index: number }) {
+  return (
+    <Draggable draggableId={column.id} index={index}>
+      {(provided) => (
+        <Container {...provided.draggableProps} ref={provided.innerRef}>
+          <Title {...provided.dragHandleProps}>{column.title}</Title>
+          <Droppable droppableId={column.id}>
+            {(provided, snapshot) => (
+              <TaskList
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {tasks.map((task, index) => (
+                  <Task key={task.id} task={task} index={index} />
+                ))}
+                {provided.placeholder}
+              </TaskList>
+            )}
+          </Droppable>
+        </Container>
+      )}
+    </Draggable>
+  );
 }
