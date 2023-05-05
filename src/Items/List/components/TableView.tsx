@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
 // import { Stack } from "@mui/material";
 import Fab from "@mui/material/Fab";
 import { useTheme } from "@mui/material/styles";
@@ -20,8 +21,7 @@ const fabStyle = {
 
 export function TableView() {
   const { items } = useItems();
-  console.log(items);
-  const [state, setState] = useState(initialData);
+
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -34,9 +34,9 @@ export function TableView() {
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
         My items
       </Typography>
-
-      <Board fetchedItems={items} />
-
+      <Box sx={{ m: 3 }}>
+        <Board fetchedItems={items} />
+      </Box>
       <Fab color="success" aria-label="add" sx={fabStyle}>
         <AddIcon onClick={onAddItem} />
       </Fab>

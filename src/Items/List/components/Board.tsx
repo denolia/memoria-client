@@ -1,22 +1,132 @@
 // import { Stack } from "@mui/material";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import React, { useState } from "react";
-import type { DropResult } from "react-beautiful-dnd";
-import DraggableList from "../../../DragDrop/DraggableList";
-import { reorder } from "../../../helpers/helpers";
+import styled from "styled-components";
+import { Column } from "./Column";
 import type { Item } from "../../types";
+
+const initialData = {
+  tasks: {
+    "task-1": { id: "task-1", content: "Take out the garbage" },
+    "task-2": { id: "task-2", content: "Watch my favorite show" },
+    "task-3": { id: "task-3", content: "Charge my phone" },
+    "task-4": { id: "task-4", content: "Cook dinner", order: "" },
+  },
+  columns: {
+    "column-1": {
+      id: "column-1",
+      title: "To do",
+      taskIds: ["task-1", "task-2", "task-3", "task-4"],
+    },
+    "column-2": {
+      id: "column-2",
+      title: "In progress",
+      taskIds: [],
+    },
+    "column-3": {
+      id: "column-3",
+      title: "Done",
+      taskIds: [],
+    },
+  },
+  columnOrder: ["column-1", "column-2", "column-3"],
+};
+
+const Container = styled.div`
+  display: flex;
+`;
 
 export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
   const [items, setItems] = useState(fetchedItems);
   console.log(items);
 
-  const onDragEnd = ({ destination, source }: DropResult) => {
-    // dropped outside the list
+  const [state, setState] = useState(initialData);
+
+  const onDragEnd = (result) => {
+    const { destination, source, draggableId, type } = result;
+
     if (!destination) return;
 
-    const newItems = reorder(items, source.index, destination.index);
+    if (destination.droppableId === source.droppableId && destination.index === source.index)
+      return;
 
-    setItems(newItems);
+    if (type === "column") {
+      const newColumnOrder = Array.from(state.columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+
+      setState((currState) => ({
+        ...currState,
+        columnOrder: newColumnOrder,
+      }));
+      return;
+    }
+
+    const start = state.columns[source.droppableId];
+    const finish = state.columns[destination.droppableId];
+
+    if (start === finish) {
+      const newTaskIds = Array.from(start.taskIds);
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
+
+      const newColumn = {
+        ...start,
+        taskIds: newTaskIds,
+      };
+
+      setState((currState) => ({
+        ...currState,
+        columns: {
+          ...state.columns,
+          [newColumn.id]: newColumn,
+        },
+      }));
+    } else {
+      const startTaskIds = Array.from(start.taskIds);
+      startTaskIds.splice(source.index, 1);
+      const newStart = {
+        ...start,
+        taskIds: startTaskIds,
+      };
+
+      const finishTaskIds = Array.from(finish.taskIds);
+      finishTaskIds.splice(destination.index, 0, draggableId);
+      const newFinish = {
+        ...finish,
+        taskIds: finishTaskIds,
+      };
+
+      setState((currState) => ({
+        ...currState,
+        columns: {
+          ...state.columns,
+          [newStart.id]: newStart,
+          [newFinish.id]: newFinish,
+        },
+      }));
+    }
   };
 
-  return <DraggableList items={items} onDragEnd={onDragEnd} />;
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="all-columns" direction="horizontal" type="column">
+        {(provided) => (
+          <Container
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            // isDraggingOver={snapshot.isDraggingOver}
+          >
+            {state.columnOrder.map((columnId, index) => {
+              const column = state.columns[columnId];
+              const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
+
+              return <Column key={columnId} column={column} tasks={tasks} index={index} />;
+            })}
+            {provided.placeholder}
+          </Container>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 }
