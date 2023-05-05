@@ -1,42 +1,49 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import styled from "styled-components";
 import Task from "./Task";
 
-const TaskList = styled.div`
-  padding: 8px;
-  transition: background-color 0.2s ease;
-  background-color: ${(props) => (props.isDraggingOver ? "skyblue" : "inherit")};
-  flex-grow: 1;
-  min-height: 100px;
-`;
-
 export function Column({ column, index, tasks }: { tasks: any; column: any; index: number }) {
+  const theme = useTheme();
+
   return (
     <Draggable draggableId={column.id} index={index}>
-      {(provided, snapshot) => (
-        <div {...provided.draggableProps} ref={provided.innerRef}>
-          <Paper elevation={snapshot.isDragging ? 2 : 0} sx={{ width: 220 }}>
-            <Typography variant="h5" sx={{ padding: 1 }} {...provided.dragHandleProps}>
+      {(dragProvided, dragSnapshot) => (
+        <div {...dragProvided.draggableProps} ref={dragProvided.innerRef}>
+          <Paper
+            elevation={dragSnapshot.isDragging ? 2 : 0}
+            sx={{ width: 220, marginX: 1, padding: 1 }}
+          >
+            <Typography variant="h5" sx={{ padding: 1 }} {...dragProvided.dragHandleProps}>
               {column.title}
             </Typography>
             <Droppable droppableId={column.id}>
-              {(provided, snapshot) => (
-                <TaskList
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  isDraggingOver={snapshot.isDraggingOver}
+              {(dropProvided, dropSnapshot) => (
+                <div
+                  {...dropProvided.droppableProps}
+                  ref={dropProvided.innerRef}
+                  // isDraggingOver={snapshot.isDraggingOver}
                 >
-                  <Stack spacing={2}>
-                    {tasks.map((task, index) => (
-                      <Task key={task.id} task={task} index={index} />
+                  <Stack
+                    spacing={1}
+                    sx={{
+                      minHeight: 100,
+                      padding: 1,
+                      backgroundColor: dropSnapshot.isDraggingOver
+                        ? theme.palette.grey["300"]
+                        : "white",
+                      transition: `background-color 0.2s ${theme.transitions.easing.easeOut}`,
+                    }}
+                  >
+                    {tasks.map((task: any, taskIndex: number) => (
+                      <Task key={task.id} task={task} index={taskIndex} />
                     ))}
-                    {provided.placeholder}
+                    {dropProvided.placeholder}
                   </Stack>
-                </TaskList>
+                </div>
               )}
             </Droppable>
           </Paper>
