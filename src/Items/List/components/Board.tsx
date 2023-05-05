@@ -1,3 +1,4 @@
+import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
@@ -38,7 +39,7 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
     };
   });
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
 
     if (!destination) return;
