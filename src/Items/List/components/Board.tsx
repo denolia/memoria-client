@@ -1,46 +1,42 @@
-// import { Stack } from "@mui/material";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { Stack } from "@mui/material";
 import React, { useState } from "react";
-import styled from "styled-components";
-import { Column } from "./Column";
+import { groupBy, keyBy } from "../../../helpers/notLodash";
 import type { Item } from "../../types";
-
-const initialData = {
-  tasks: {
-    "task-1": { id: "task-1", content: "Take out the garbage" },
-    "task-2": { id: "task-2", content: "Watch my favorite show" },
-    "task-3": { id: "task-3", content: "Charge my phone" },
-    "task-4": { id: "task-4", content: "Cook dinner", order: "" },
-  },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "To do",
-      taskIds: ["task-1", "task-2", "task-3", "task-4"],
-    },
-    "column-2": {
-      id: "column-2",
-      title: "In progress",
-      taskIds: [],
-    },
-    "column-3": {
-      id: "column-3",
-      title: "Done",
-      taskIds: [],
-    },
-  },
-  columnOrder: ["column-1", "column-2", "column-3"],
-};
-
-const Container = styled.div`
-  display: flex;
-`;
+import { Column } from "./Column";
 
 export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
-  const [items, setItems] = useState(fetchedItems);
-  console.log(items);
+  const [state, setState] = useState(() => {
+    const keyedTasks = keyBy(fetchedItems, "id");
+    const groupedTasks = groupBy(fetchedItems, (item) => item.status);
 
-  const [state, setState] = useState(initialData);
+    return {
+      tasks: keyedTasks,
+      columns: {
+        "column-0": {
+          id: "column-0",
+          title: "Backlog",
+          taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
+        },
+        "column-1": {
+          id: "column-1",
+          title: "To do",
+          taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
+        },
+        "column-2": {
+          id: "column-2",
+          title: "In progress",
+          taskIds: groupedTasks.Inprogress?.map((item) => item.id) ?? [],
+        },
+        "column-3": {
+          id: "column-3",
+          title: "Done",
+          taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
+        },
+      },
+      columnOrder: ["column-0", "column-1", "column-2", "column-3"],
+    };
+  });
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -112,19 +108,21 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="all-columns" direction="horizontal" type="column">
         {(provided) => (
-          <Container
+          <div
             {...provided.droppableProps}
             ref={provided.innerRef}
             // isDraggingOver={snapshot.isDraggingOver}
           >
-            {state.columnOrder.map((columnId, index) => {
-              const column = state.columns[columnId];
-              const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
+            <Stack direction="row">
+              {state.columnOrder.map((columnId, index) => {
+                const column = state.columns[columnId];
+                const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
 
-              return <Column key={columnId} column={column} tasks={tasks} index={index} />;
-            })}
-            {provided.placeholder}
-          </Container>
+                return <Column key={columnId} column={column} tasks={tasks} index={index} />;
+              })}
+              {provided.placeholder}
+            </Stack>
+          </div>
         )}
       </Droppable>
     </DragDropContext>
