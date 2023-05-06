@@ -3,6 +3,13 @@ export enum ItemType {
   EPIC = "Epic",
 }
 
+export enum Status {
+  TODO = "Todo",
+  IN_PROGRESS = "InProgress",
+  DONE = "Done",
+  BACKLOG = "Backlog",
+}
+
 export interface Item {
   id: string;
   type: ItemType;

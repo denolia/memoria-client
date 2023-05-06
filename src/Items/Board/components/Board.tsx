@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { groupBy, keyBy } from "../../../helpers/notLodash";
 import { moveItem, reorder } from "../../../helpers/reorder";
 import { requestUpdateItem } from "../../state/requestUpdateBook";
+import { Status } from "../../types";
 import type { ColumnDef, Item } from "../../types";
 import { Column } from "./Column";
 
@@ -17,28 +18,28 @@ function getInitialState(fetchedItems: Item[]) {
     return {
       tasks: keyedTasks,
       columns: {
-        Backlog: {
-          id: "Backlog",
+        [Status.BACKLOG]: {
+          id: Status.BACKLOG,
           title: "Backlog",
           taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
         },
-        Todo: {
-          id: "Todo",
+        [Status.TODO]: {
+          id: Status.TODO,
           title: "To do",
           taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
         },
-        Inprogress: {
-          id: "Inprogress",
+        [Status.IN_PROGRESS]: {
+          id: Status.IN_PROGRESS,
           title: "In progress",
           taskIds: groupedTasks.Inprogress?.map((item) => item.id) ?? [],
         },
-        Done: {
-          id: "Done",
+        [Status.DONE]: {
+          id: Status.DONE,
           title: "Done",
           taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
         },
       } as { [key: string]: ColumnDef },
-      columnOrder: ["Backlog", "Todo", "Inprogress", "Done"],
+      columnOrder: [Status.BACKLOG, Status.TODO, Status.IN_PROGRESS, Status.DONE],
     };
   };
 }

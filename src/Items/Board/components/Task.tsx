@@ -5,11 +5,18 @@ import { createTheme } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { requestDeleteItem } from "../../state/requestDeleteItem";
 
 const darkTheme = createTheme({ palette: { mode: "dark" } });
 
 export default function Task({ index, task }: { index: number; task: any }) {
-  const onDelete = () => {
+  const token = "todo";
+
+  const onDelete = async () => {
+    // todo confirmation
+    // todo use context to remove item from state
+    const res = await requestDeleteItem(task, token);
+
     console.log("delete: to be implemented");
   };
 
