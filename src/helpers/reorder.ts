@@ -6,3 +6,17 @@ export const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[]
 
   return result;
 };
+
+export function moveItem<T>(
+  sourceList: T[],
+  startIndex: number,
+  destinationList: T[],
+  destinationIndex: number
+) {
+  const startTaskIds = Array.from(sourceList);
+  const [removed] = startTaskIds.splice(startIndex, 1);
+
+  const finishTaskIds = Array.from(destinationList);
+  finishTaskIds.splice(destinationIndex, 0, removed);
+  return { startTaskIds, finishTaskIds };
+}

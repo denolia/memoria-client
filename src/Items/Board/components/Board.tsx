@@ -3,7 +3,7 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import { groupBy, keyBy } from "../../../helpers/notLodash";
-import { reorder } from "../../../helpers/reorder";
+import { moveItem, reorder } from "../../../helpers/reorder";
 import type { ColumnDef, Item } from "../../types";
 import { Column } from "./Column";
 
@@ -46,7 +46,7 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
   const [state, setState] = useState(getInitialState(fetchedItems));
 
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, type } = result;
 
     if (!destination) return;
 
@@ -54,9 +54,7 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
       return;
 
     if (type === "column") {
-      const newColumnOrder = Array.from(state.columnOrder);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
+      const newColumnOrder = reorder(state.columnOrder, source.index, destination.index);
 
       setState((currState) => ({
         ...currState,
@@ -83,20 +81,21 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
         },
       }));
     } else {
-      const startTaskIds = Array.from(start.taskIds);
-      startTaskIds.splice(source.index, 1);
-      const newStart = {
-        ...start,
-        taskIds: startTaskIds,
-      };
+      const { startTaskIds, finishTaskIds } = moveItem(
+        start.taskIds,
+        source.index,
+        finish.taskIds,
+        destination.index
+      );
 
-      const finishTaskIds = Array.from(finish.taskIds);
-      finishTaskIds.splice(destination.index, 0, draggableId);
       const newFinish = {
         ...finish,
         taskIds: finishTaskIds,
       };
-
+      const newStart = {
+        ...start,
+        taskIds: startTaskIds,
+      };
       setState((currState) => ({
         ...currState,
         columns: {
