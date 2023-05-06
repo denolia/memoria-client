@@ -15,7 +15,7 @@ const fabStyle = {
   right: 16,
 };
 
-export function TableView() {
+export function BoardView() {
   const { items } = useItems();
 
   const theme = useTheme();

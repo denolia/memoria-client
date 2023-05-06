@@ -3,11 +3,13 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import { groupBy, keyBy } from "../../../helpers/notLodash";
-import type { Item } from "../../types";
+import { reorder } from "../../../helpers/reorder";
+import type { ColumnDef, Item } from "../../types";
 import { Column } from "./Column";
 
-export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
-  const [state, setState] = useState(() => {
+function getInitialState(fetchedItems: Item[]) {
+  // since it is a function, the filtering and grouping will be executed only once
+  return () => {
     const keyedTasks = keyBy(fetchedItems, "id");
     const groupedTasks = groupBy(fetchedItems, (item) => item.status);
 
@@ -34,10 +36,14 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
           title: "Done",
           taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
         },
-      },
+      } as { [key: string]: ColumnDef },
       columnOrder: ["column-0", "column-1", "column-2", "column-3"],
     };
-  });
+  };
+}
+
+export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
+  const [state, setState] = useState(getInitialState(fetchedItems));
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
@@ -63,10 +69,7 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
     const finish = state.columns[destination.droppableId];
 
     if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
+      const newTaskIds = reorder(start.taskIds, source.index, destination.index);
       const newColumn = {
         ...start,
         taskIds: newTaskIds,

@@ -7,7 +7,7 @@ import { Route, Routes } from "react-router-dom";
 // import { EditPage } from '../Items/Editor/components/EditPage';
 // import { ItemTable } from '../Items/List/components/ItemTable';
 import { Header } from "./Header";
-import { TableView } from "./Items/List/components/TableView";
+import { BoardView } from "./Items/Board/components/BoardView";
 
 const sections = [
   { title: "Board", url: "/" },
@@ -20,7 +20,7 @@ export function AppRoutes() {
       <Header title="Task tracker" sections={sections} />
 
       <Routes>
-        <Route path="/" element={<TableView />} />
+        <Route path="/" element={<BoardView />} />
         {/* <Route path="/edit/:id" element={<EditPage />} /> */}
         {/* <Route path="/create" element={<CreateItemPage />} /> */}
         {/* <Route path="/login" element={<SignInContainer />} /> */}
