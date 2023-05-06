@@ -1,14 +1,17 @@
-import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { Stack } from "@mui/material";
+import { Draggable } from "@hello-pangea/dnd";
 import Paper from "@mui/material/Paper";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import Task from "./Task";
+import type { ColumnDef, Item } from "../../types";
+import { DroppableArea } from "./DroppableArea";
 
-export function Column({ column, index, tasks }: { tasks: any; column: any; index: number }) {
-  const theme = useTheme();
+interface Props {
+  tasks: Item[];
+  column: ColumnDef;
+  index: number;
+}
 
+export function Column({ column, index, tasks }: Props) {
   return (
     <Draggable draggableId={column.id} index={index}>
       {(dragProvided, dragSnapshot) => (
@@ -20,32 +23,7 @@ export function Column({ column, index, tasks }: { tasks: any; column: any; inde
             <Typography variant="h5" sx={{ padding: 1 }} {...dragProvided.dragHandleProps}>
               {column.title}
             </Typography>
-            <Droppable droppableId={column.id}>
-              {(dropProvided, dropSnapshot) => (
-                <div
-                  {...dropProvided.droppableProps}
-                  ref={dropProvided.innerRef}
-                  // isDraggingOver={snapshot.isDraggingOver}
-                >
-                  <Stack
-                    spacing={1}
-                    sx={{
-                      minHeight: 100,
-                      padding: 1,
-                      backgroundColor: dropSnapshot.isDraggingOver
-                        ? theme.palette.grey["300"]
-                        : "white",
-                      transition: `background-color 0.2s ${theme.transitions.easing.easeOut}`,
-                    }}
-                  >
-                    {tasks.map((task: any, taskIndex: number) => (
-                      <Task key={task.id} task={task} index={taskIndex} />
-                    ))}
-                    {dropProvided.placeholder}
-                  </Stack>
-                </div>
-              )}
-            </Droppable>
+            <DroppableArea column={column} tasks={tasks} />
           </Paper>
         </div>
       )}

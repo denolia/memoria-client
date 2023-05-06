@@ -4,6 +4,7 @@ import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import { groupBy, keyBy } from "../../../helpers/notLodash";
 import { moveItem, reorder } from "../../../helpers/reorder";
+import { requestUpdateItem } from "../../state/requestUpdateBook";
 import type { ColumnDef, Item } from "../../types";
 import { Column } from "./Column";
 
@@ -16,36 +17,38 @@ function getInitialState(fetchedItems: Item[]) {
     return {
       tasks: keyedTasks,
       columns: {
-        "column-0": {
-          id: "column-0",
+        Backlog: {
+          id: "Backlog",
           title: "Backlog",
           taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
         },
-        "column-1": {
-          id: "column-1",
+        Todo: {
+          id: "Todo",
           title: "To do",
           taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
         },
-        "column-2": {
-          id: "column-2",
+        Inprogress: {
+          id: "Inprogress",
           title: "In progress",
           taskIds: groupedTasks.Inprogress?.map((item) => item.id) ?? [],
         },
-        "column-3": {
-          id: "column-3",
+        Done: {
+          id: "Done",
           title: "Done",
           taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
         },
       } as { [key: string]: ColumnDef },
-      columnOrder: ["column-0", "column-1", "column-2", "column-3"],
+      columnOrder: ["Backlog", "Todo", "Inprogress", "Done"],
     };
   };
 }
 
 export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
   const [state, setState] = useState(getInitialState(fetchedItems));
+  // todo auth
+  const token = "todo";
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     const { destination, source, type } = result;
 
     if (!destination) return;
@@ -81,29 +84,34 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
         },
       }));
     } else {
-      const { startTaskIds, finishTaskIds } = moveItem(
+      const { startTaskIds, finishTaskIds, removed } = moveItem(
         start.taskIds,
         source.index,
         finish.taskIds,
         destination.index
       );
 
-      const newFinish = {
-        ...finish,
-        taskIds: finishTaskIds,
-      };
-      const newStart = {
-        ...start,
-        taskIds: startTaskIds,
-      };
-      setState((currState) => ({
-        ...currState,
-        columns: {
-          ...state.columns,
-          [newStart.id]: newStart,
-          [newFinish.id]: newFinish,
-        },
-      }));
+      const updatedTask: Item = { ...state.tasks[removed], status: finish.id };
+      const res = await requestUpdateItem(updatedTask, token);
+
+      if (res) {
+        const newFinish = {
+          ...finish,
+          taskIds: finishTaskIds,
+        };
+        const newStart = {
+          ...start,
+          taskIds: startTaskIds,
+        };
+        setState((currState) => ({
+          ...currState,
+          columns: {
+            ...state.columns,
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish,
+          },
+        }));
+      }
     }
   };
 

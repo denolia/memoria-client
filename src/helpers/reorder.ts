@@ -18,5 +18,5 @@ export function moveItem<T>(
 
   const finishTaskIds = Array.from(destinationList);
   finishTaskIds.splice(destinationIndex, 0, removed);
-  return { startTaskIds, finishTaskIds };
+  return { startTaskIds, finishTaskIds, removed };
 }
