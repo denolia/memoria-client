@@ -2,7 +2,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import type { ColumnDef, Item } from "../../types";
+import type { ColumnDef, Item } from "../types";
 import { DroppableArea } from "./DroppableArea";
 
 interface Props {

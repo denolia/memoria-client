@@ -7,7 +7,7 @@ import { Route, Routes } from "react-router-dom";
 // import { EditPage } from '../Items/Editor/components/EditPage';
 // import { ItemTable } from '../Items/List/components/ItemTable';
 import { Header } from "./Header";
-import { BoardView } from "./Items/Board/components/BoardView";
+import { BoardView } from "./Items/Board/BoardView";
 
 const sections = [
   { title: "Board", url: "/" },

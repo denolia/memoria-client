@@ -2,11 +2,11 @@ import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
-import { groupBy, keyBy } from "../../../helpers/notLodash";
-import { moveItem, reorder } from "../../../helpers/reorder";
-import { requestUpdateItem } from "../../state/requestUpdateBook";
-import { Status } from "../../types";
-import type { ColumnDef, Item } from "../../types";
+import { groupBy, keyBy } from "../../helpers/notLodash";
+import { moveItem, reorder } from "../../helpers/reorder";
+import { requestUpdateItem } from "../state/requestUpdateBook";
+import { Status } from "../types";
+import type { ColumnDef, Item } from "../types";
 import { Column } from "./Column";
 
 function getInitialState(fetchedItems: Item[]) {

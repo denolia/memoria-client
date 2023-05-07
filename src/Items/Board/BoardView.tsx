@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { useNavigate } from "react-router";
 
-import { useItems } from "../../state/ItemContext";
+import { useItems } from "../state/ItemContext";
 import { Board } from "./Board";
 
 const fabStyle = {

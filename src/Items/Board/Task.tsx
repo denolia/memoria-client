@@ -5,7 +5,7 @@ import { createTheme } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { requestDeleteItem } from "../../state/requestDeleteItem";
+import { requestDeleteItem } from "../state/requestDeleteItem";
 
 const darkTheme = createTheme({ palette: { mode: "dark" } });
 

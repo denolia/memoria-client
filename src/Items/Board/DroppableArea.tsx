@@ -2,7 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
-import type { ColumnDef, Item } from "../../types";
+import type { ColumnDef, Item } from "../types";
 import Task from "./Task";
 
 interface Props {
