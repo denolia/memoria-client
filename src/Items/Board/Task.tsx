@@ -3,6 +3,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { createTheme } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import { useConfirm } from "material-ui-confirm";
 import React from "react";
 import { useItems } from "../state/ItemContext";
 import type { Item } from "../types";
@@ -16,10 +17,14 @@ interface Props {
 
 export default function Task({ order, taskId }: Props) {
   const { deleteItem, items } = useItems();
+  const confirm = useConfirm();
+
   const task = items[taskId];
   const onDelete = async () => {
-    // todo confirmation
-    deleteItem(taskId);
+    try {
+      await confirm({ title: "Delete this task?", description: task.title });
+      deleteItem(taskId);
+    } catch {}
   };
 
   return task ? (
