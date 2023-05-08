@@ -24,7 +24,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     updateItem: async () => true,
     deleteItem: async () => true,
   });
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const getAllItems = async () => {
     const fetchedItems = await requestGetAllItems(user?.jwt);
@@ -39,6 +39,12 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      getAllItems();
+    }
+  }, [isLoggedIn]);
+
   const updateItem = async (updatedItem: Item) => {
     const res = await requestUpdateItem(updatedItem, user?.jwt);
 
@@ -46,9 +52,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
       // todo add toast notification
       return false;
     }
+    const newItem = res.data;
 
     setState(({ items, ...rest }) => ({
-      items: { ...items, [updatedItem.id]: updatedItem },
+      items: { ...items, [newItem.id]: newItem },
       ...rest,
     }));
     return true;
@@ -80,17 +87,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useItems() {
-  const { isLoggedIn } = useAuth();
-
   const context = React.useContext(Context);
   if (!context) {
     throw new Error("useItems must be used within a ItemsProvider");
   }
-  useEffect(() => {
-    if (isLoggedIn) {
-      context.getAllItems();
-    }
-  }, [isLoggedIn]);
 
   return context;
 }

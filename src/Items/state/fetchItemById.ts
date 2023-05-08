@@ -7,11 +7,5 @@ export function fetchItemById(itemId: string, token: string | undefined) {
     .get(`${API}item/${itemId}`, {
       headers: { Authentication: `Bearer ${token}` },
     })
-    .then(
-      (response) =>
-        ({
-          ...response.data,
-          progress: Number(response.data.progress),
-        } as Item)
-    );
+    .then((response) => response.data as Item);
 }

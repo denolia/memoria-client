@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-// import { useAuth } from '../../../Auth/AuthContext';
+import { useAuth } from "../../../Auth/AuthContext";
 import { fetchItemById } from "../../state/fetchItemById";
 import type { Item } from "../../types";
 import { ItemForm } from "./ItemForm";
@@ -9,8 +9,7 @@ export function EditPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState<Item>();
-  // const { user } = useAuth();
-  const user = { jwt: "123" };
+  const { user } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -30,5 +29,5 @@ export function EditPage() {
     return <div>Unable to fetch the item</div>;
   }
 
-  return <ItemForm currentItem={item} submitButtonText="Update Item" title="Edit Item" />;
+  return <ItemForm currentItem={item} submitButtonText="Update Item" pageTitle="Edit Item" />;
 }
