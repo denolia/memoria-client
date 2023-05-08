@@ -1,11 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-
-// import { SignInContainer } from '@app/Auth/Login/containers/SignInContainer';
-// import { SignUpContainer } from '@app/Auth/Login/containers/SignUpContainer';
-// import { CreateItemPage } from '../Items/Editor/components/CreateItemPage';
-// import { EditPage } from '../Items/Editor/components/EditPage';
-// import { ItemTable } from '../Items/List/components/ItemTable';
+import { SignInContainer } from "./Auth/Login/containers/SignInContainer";
+import { SignUpContainer } from "./Auth/Login/containers/SignUpContainer";
 import { Header } from "./Header";
 import { BoardView } from "./Items/Board/BoardView";
 
@@ -23,8 +19,8 @@ export function AppRoutes() {
         <Route path="/" element={<BoardView />} />
         {/* <Route path="/edit/:id" element={<EditPage />} /> */}
         {/* <Route path="/create" element={<CreateItemPage />} /> */}
-        {/* <Route path="/login" element={<SignInContainer />} /> */}
-        {/* <Route path="/register" element={<SignUpContainer />} /> */}
+        <Route path="/login" element={<SignInContainer />} />
+        <Route path="/register" element={<SignUpContainer />} />
       </Routes>
     </div>
   );
