@@ -1,22 +1,21 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Stack } from "@mui/material";
-import React, { useState } from "react";
-import { groupBy, keyBy } from "../../helpers/notLodash";
+import React, { useEffect, useState } from "react";
+import { groupBy } from "../../helpers/notLodash";
 import { moveItem, reorder } from "../../helpers/reorder";
-import { requestUpdateItem } from "../state/requestUpdateBook";
+import { useItems } from "../state/ItemContext";
 import { Status } from "../types";
-import type { ColumnDef, Item } from "../types";
+import type { ColumnDef, Item, IndexedItems } from "../types";
 import { Column } from "./Column";
 
-function getInitialState(fetchedItems: Item[]) {
+function getBoardState(indexedItems: IndexedItems) {
   // since it is a function, the filtering and grouping will be executed only once
   return () => {
-    const keyedTasks = keyBy(fetchedItems, "id");
-    const groupedTasks = groupBy(fetchedItems, (item) => item.status);
+    console.log("execute getBoardState");
+    const groupedTasks = groupBy(Object.values(indexedItems), (item) => item.status);
 
     return {
-      tasks: keyedTasks,
       columns: {
         [Status.BACKLOG]: {
           id: Status.BACKLOG,
@@ -44,10 +43,13 @@ function getInitialState(fetchedItems: Item[]) {
   };
 }
 
-export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
-  const [state, setState] = useState(getInitialState(fetchedItems));
-  // todo auth
-  const token = "todo";
+export function Board() {
+  const { items, updateItem } = useItems();
+  const [state, setState] = useState(getBoardState(items));
+
+  useEffect(() => {
+    setState(getBoardState(items)());
+  }, [items]);
 
   const onDragEnd = async (result: DropResult) => {
     const { destination, source, type } = result;
@@ -85,34 +87,35 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
         },
       }));
     } else {
-      const { startTaskIds, finishTaskIds, removed } = moveItem(
-        start.taskIds,
-        source.index,
-        finish.taskIds,
-        destination.index
-      );
+      const {
+        startTaskIds,
+        finishTaskIds,
+        removed: movedItem,
+      } = moveItem(start.taskIds, source.index, finish.taskIds, destination.index);
 
-      const updatedTask: Item = { ...state.tasks[removed], status: finish.id };
-      const res = await requestUpdateItem(updatedTask, token);
+      const updatedTask: Item = { ...items[movedItem], status: finish.id };
 
-      if (res) {
-        const newFinish = {
-          ...finish,
-          taskIds: finishTaskIds,
-        };
-        const newStart = {
-          ...start,
-          taskIds: startTaskIds,
-        };
-        setState((currState) => ({
-          ...currState,
-          columns: {
-            ...state.columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish,
-          },
-        }));
-      }
+      const res = await updateItem(updatedTask);
+
+      // shouldn't be necessary
+      // if (res) {
+      //   const newFinish = {
+      //     ...finish,
+      //     taskIds: finishTaskIds,
+      //   };
+      //   const newStart = {
+      //     ...start,
+      //     taskIds: startTaskIds,
+      //   };
+      //   setState((currState) => ({
+      //     ...currState,
+      //     columns: {
+      //       ...state.columns,
+      //       [newStart.id]: newStart,
+      //       [newFinish.id]: newFinish,
+      //     },
+      //   }));
+      // }
     }
   };
 
@@ -128,7 +131,7 @@ export function Board({ fetchedItems }: { fetchedItems: Item[] }) {
             <Stack direction="row">
               {state.columnOrder.map((columnId, index) => {
                 const column = state.columns[columnId];
-                const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
+                const tasks = column.taskIds.map((taskId) => items[taskId]);
 
                 return <Column key={columnId} column={column} tasks={tasks} index={index} />;
               })}

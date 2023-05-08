@@ -30,9 +30,9 @@ export function BoardView() {
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
         My items
       </Typography>
-      {items.length > 0 && (
+      {Object.keys(items)?.length > 0 && (
         <Box sx={{ m: 3 }}>
-          <Board fetchedItems={items} />
+          <Board />
         </Box>
       )}
       <Fab color="success" aria-label="add" sx={fabStyle}>

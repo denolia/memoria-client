@@ -32,6 +32,10 @@ export interface Item {
   created: string;
 }
 
+export interface IndexedItems {
+  [key: string]: Item;
+}
+
 export interface ColumnDef {
   id: string;
   title: string;
