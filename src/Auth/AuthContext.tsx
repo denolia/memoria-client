@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import { User } from "./types";
+import type { User } from "./types";
 
 interface AuthContext {
   user: User | null;
@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isLoggedIn = Boolean(user?.jwt);
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value: AuthContext = { user, login, signup, logout, isLoggedIn };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

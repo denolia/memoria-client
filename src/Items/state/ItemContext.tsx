@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../../Auth/AuthContext";
 import { keyBy } from "../../helpers/notLodash";
-// import { useAuth } from '../../Auth/AuthContext';
-// import { requestUpdateItem } from './requestUpdateItem';
 import type { Item } from "../types";
 import { requestDeleteItem } from "./requestDeleteItem";
 import { requestGetAllItems } from "./requestGetAllItems";
@@ -25,12 +24,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     updateItem: async () => true,
     deleteItem: async () => true,
   });
-  // const { user } = useAuth();
-  // TODO use real user
-  const user = { jwt: "123" };
+  const { user } = useAuth();
 
   const getAllItems = async () => {
-    const fetchedItems = await requestGetAllItems(); // user?.jwt);
+    const fetchedItems = await requestGetAllItems(user?.jwt);
     const indexedItems = keyBy(fetchedItems, "id");
 
     if (indexedItems) {
@@ -83,8 +80,8 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useItems() {
-  // const { isLoggedIn } = useAuth();
-  const isLoggedIn = true;
+  const { isLoggedIn } = useAuth();
+
   const context = React.useContext(Context);
   if (!context) {
     throw new Error("useItems must be used within a ItemsProvider");
