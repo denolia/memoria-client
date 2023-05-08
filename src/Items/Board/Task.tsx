@@ -9,16 +9,21 @@ import type { Item } from "../types";
 
 const darkTheme = createTheme({ palette: { mode: "dark" } });
 
-export default function Task({ order, task }: { order: number; task: Item }) {
-  const { deleteItem } = useItems();
+interface Props {
+  order: number;
+  taskId: Item["id"];
+}
 
+export default function Task({ order, taskId }: Props) {
+  const { deleteItem, items } = useItems();
+  const task = items[taskId];
   const onDelete = async () => {
     // todo confirmation
-    deleteItem(task.id);
+    deleteItem(taskId);
   };
 
-  return (
-    <Draggable draggableId={task.id} index={order}>
+  return task ? (
+    <Draggable draggableId={taskId} index={order}>
       {(provided, snapshot) => (
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
           <Paper
@@ -29,11 +34,11 @@ export default function Task({ order, task }: { order: number; task: Item }) {
               justifyContent: "space-between",
             }}
           >
-            <Typography>{task.title}</Typography>
+            <Typography>{task?.title}</Typography>
             <DeleteOutlineIcon color="secondary" onClick={onDelete} />
           </Paper>
         </div>
       )}
     </Draggable>
-  );
+  ) : null;
 }

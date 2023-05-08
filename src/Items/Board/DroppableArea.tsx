@@ -7,9 +7,9 @@ import Task from "./Task";
 
 interface Props {
   column: ColumnDef;
-  tasks: Item[];
+  tasks: Item["id"][];
 }
-// todo no need to put whole task object in here
+
 export function DroppableArea({ column, tasks }: Props) {
   const theme = useTheme();
 
@@ -26,8 +26,8 @@ export function DroppableArea({ column, tasks }: Props) {
               transition: `background-color 0.2s ${theme.transitions.easing.easeOut}`,
             }}
           >
-            {tasks.map((task: any, taskIndex: number) => (
-              <Task key={task.id} task={task} order={taskIndex} />
+            {tasks.map((taskId: Item["id"], taskIndex: number) => (
+              <Task key={taskId} taskId={taskId} order={taskIndex} />
             ))}
             {dropProvided.placeholder}
           </Stack>

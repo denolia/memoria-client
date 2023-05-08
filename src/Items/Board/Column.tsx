@@ -6,11 +6,11 @@ import type { ColumnDef, Item } from "../types";
 import { DroppableArea } from "./DroppableArea";
 
 interface Props {
-  tasks: Item[];
+  tasks: Item["id"][];
   column: ColumnDef;
   index: number;
 }
-// todo no need to put whole task object in here
+
 export function Column({ column, index, tasks }: Props) {
   return (
     <Draggable draggableId={column.id} index={index}>

@@ -10,7 +10,6 @@ import type { ColumnDef, Item, IndexedItems } from "../types";
 import { Column } from "./Column";
 
 function getBoardState(indexedItems: IndexedItems) {
-  // since it is a function, the filtering and grouping will be executed only once
   return () => {
     console.log("execute getBoardState");
     const groupedTasks = groupBy(Object.values(indexedItems), (item) => item.status);
@@ -131,9 +130,10 @@ export function Board() {
             <Stack direction="row">
               {state.columnOrder.map((columnId, index) => {
                 const column = state.columns[columnId];
-                const tasks = column.taskIds.map((taskId) => items[taskId]);
 
-                return <Column key={columnId} column={column} tasks={tasks} index={index} />;
+                return (
+                  <Column key={columnId} column={column} tasks={column.taskIds} index={index} />
+                );
               })}
               {provided.placeholder}
             </Stack>
