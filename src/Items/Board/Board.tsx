@@ -29,7 +29,7 @@ function getBoardState(indexedItems: IndexedItems) {
         [Status.IN_PROGRESS]: {
           id: Status.IN_PROGRESS,
           title: "In progress",
-          taskIds: groupedTasks.Inprogress?.map((item) => item.id) ?? [],
+          taskIds: groupedTasks.InProgress?.map((item) => item.id) ?? [],
         },
         [Status.DONE]: {
           id: Status.DONE,
@@ -94,27 +94,26 @@ export function Board() {
 
       const updatedTask: Item = { ...items[movedItem], status: finish.id };
 
-      const res = await updateItem(updatedTask);
+      // initiate request to backend, without awaiting response
+      updateItem(updatedTask);
 
-      // shouldn't be necessary
-      // if (res) {
-      //   const newFinish = {
-      //     ...finish,
-      //     taskIds: finishTaskIds,
-      //   };
-      //   const newStart = {
-      //     ...start,
-      //     taskIds: startTaskIds,
-      //   };
-      //   setState((currState) => ({
-      //     ...currState,
-      //     columns: {
-      //       ...state.columns,
-      //       [newStart.id]: newStart,
-      //       [newFinish.id]: newFinish,
-      //     },
-      //   }));
-      // }
+      // in parallel, optimistically update UI
+      const newFinish = {
+        ...finish,
+        taskIds: finishTaskIds,
+      };
+      const newStart = {
+        ...start,
+        taskIds: startTaskIds,
+      };
+      setState((currState) => ({
+        ...currState,
+        columns: {
+          ...state.columns,
+          [newStart.id]: newStart,
+          [newFinish.id]: newFinish,
+        },
+      }));
     }
   };
 
