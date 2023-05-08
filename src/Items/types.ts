@@ -10,6 +10,12 @@ export enum Status {
   BACKLOG = "Backlog",
 }
 
+export enum Priority {
+  LOW = "Low",
+  MEDIUM = "Medium",
+  HIGH = "High",
+}
+
 export interface Item {
   id: string;
   type: ItemType;
