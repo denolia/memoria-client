@@ -32,6 +32,10 @@ module.exports = {
     },
   },
   rules: {
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "no-unused-vars": ["off"],
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -42,6 +46,8 @@ module.exports = {
         tsx: "never",
       },
     ],
+    "react/jsx-no-bind": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       "error",

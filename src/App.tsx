@@ -1,3 +1,4 @@
+import { ConfirmProvider } from "material-ui-confirm";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./AppRoutes";
@@ -8,7 +9,9 @@ export function App() {
     <div>
       <BrowserRouter>
         <ItemsProvider>
-          <AppRoutes />
+          <ConfirmProvider>
+            <AppRoutes />
+          </ConfirmProvider>
         </ItemsProvider>
       </BrowserRouter>
     </div>

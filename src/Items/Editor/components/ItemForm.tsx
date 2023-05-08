@@ -31,6 +31,7 @@ export function ItemForm({ submitButtonText, currentItem, title }: Props) {
     const progress = Number((data.get("progress") as string | undefined) ?? "0");
     const name = data.get("name") as string | undefined;
 
+    // @ts-ignore
     const newItem = {
       description,
       author,
@@ -60,7 +61,7 @@ export function ItemForm({ submitButtonText, currentItem, title }: Props) {
           id="name"
           label="Title"
           name="name"
-          defaultValue={currentItem?.name}
+          defaultValue={currentItem?.title}
           autoFocus
         />
 
@@ -71,7 +72,7 @@ export function ItemForm({ submitButtonText, currentItem, title }: Props) {
           name="author"
           label="Author"
           id="author"
-          defaultValue={currentItem?.author}
+          // defaultValue={currentItem?.author}
         />
 
         <TextField
@@ -91,7 +92,7 @@ export function ItemForm({ submitButtonText, currentItem, title }: Props) {
           name="progress"
           label="Progress"
           id="progress"
-          defaultValue={currentItem?.progress}
+          // defaultValue={currentItem?.progress}
         />
 
         <Button type="submit" fullWidth variant="contained" color="success" sx={{ mt: 3, mb: 2 }}>

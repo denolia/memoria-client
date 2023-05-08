@@ -1,67 +1,83 @@
 import React, { useEffect, useState } from "react";
+import { keyBy } from "../../helpers/notLodash";
 // import { useAuth } from '../../Auth/AuthContext';
 // import { requestUpdateItem } from './requestUpdateItem';
 import type { Item } from "../types";
+import { requestDeleteItem } from "./requestDeleteItem";
 import { requestGetAllItems } from "./requestGetAllItems";
+import { requestUpdateItem } from "./requestUpdateBook";
 
 interface ItemsContext {
-  items: Item[];
+  items: { [key: string]: Item }; // store indexed items for easier access
   loading: boolean;
   getAllItems: () => void;
-  updateItem: (b: Item) => Promise<boolean>;
+  updateItem: (_: Item) => Promise<boolean>;
+  deleteItem: (_: Item["id"]) => Promise<boolean>;
 }
 
 const Context = React.createContext<ItemsContext | undefined>(undefined);
 
 export function ItemsProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<ItemsContext>({
-    items: [],
+    items: {},
     loading: true,
     getAllItems: () => {},
     updateItem: async () => true,
+    deleteItem: async () => true,
   });
   // const { user } = useAuth();
   // TODO use real user
-  // const user = { jwt: '123' };
+  const user = { jwt: "123" };
+
   const getAllItems = async () => {
-    const items = await requestGetAllItems(); // user?.jwt);
-    if (items) {
+    const fetchedItems = await requestGetAllItems(); // user?.jwt);
+    const indexedItems = keyBy(fetchedItems, "id");
+
+    if (indexedItems) {
       setState(({ items: _, ...rest }) => ({
-        items,
+        items: indexedItems,
         ...rest,
         loading: false,
       }));
     }
   };
 
-  const updateItem = async (newItem: Item) =>
-    // const res = await requestUpdateItem(newItem, user?.jwt);
-    //
-    // if (!res) {
-    //   // todo add toast notification
-    //   return false;
-    // }
-    //
-    // setState(({ items, ...rest }) => {
-    //   const existingItemIndex = items.findIndex(
-    //     (item) => item.id === newItem.id,
-    //   );
-    //   if (existingItemIndex >= 0) {
-    //     const updatedItems = [...items];
-    //     updatedItems[existingItemIndex] = newItem;
-    //     return {
-    //       items: updatedItems,
-    //       ...rest,
-    //     };
-    //   }
-    //
-    //   return {
-    //     items: [...items, newItem],
-    //     ...rest,
-    //   };
-    // });
-    true;
-  const value = { ...state, updateItem, getAllItems };
+  const updateItem = async (updatedItem: Item) => {
+    const res = await requestUpdateItem(updatedItem, user?.jwt);
+
+    if (!res) {
+      // todo add toast notification
+      return false;
+    }
+
+    setState(({ items, ...rest }) => ({
+      items: { ...items, [updatedItem.id]: updatedItem },
+      ...rest,
+    }));
+    return true;
+  };
+
+  const deleteItem = async (deletedItemId: Item["id"]) => {
+    const res = await requestDeleteItem(deletedItemId, user?.jwt);
+
+    if (!res) {
+      // todo add toast notification
+      return false;
+    }
+
+    setState(({ items: currItems, ...rest }) => {
+      // delete currItems[deletedItemId];
+      const { [deletedItemId]: _, ...items } = currItems;
+      return {
+        items,
+        ...rest,
+      };
+    });
+    return true;
+  };
+
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const value = { ...state, updateItem, getAllItems, deleteItem };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
