@@ -10,44 +10,41 @@ import type { ColumnDef, Item, IndexedItems } from "../types";
 import { Column } from "./Column";
 
 function getBoardState(indexedItems: IndexedItems) {
-  return () => {
-    console.log("execute getBoardState");
-    const groupedTasks = groupBy(Object.values(indexedItems), (item) => item.status);
+  const groupedTasks = groupBy(Object.values(indexedItems), (item) => item.status);
 
-    return {
-      columns: {
-        [Status.BACKLOG]: {
-          id: Status.BACKLOG,
-          title: "Backlog",
-          taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
-        },
-        [Status.TODO]: {
-          id: Status.TODO,
-          title: "To do",
-          taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
-        },
-        [Status.IN_PROGRESS]: {
-          id: Status.IN_PROGRESS,
-          title: "In progress",
-          taskIds: groupedTasks.InProgress?.map((item) => item.id) ?? [],
-        },
-        [Status.DONE]: {
-          id: Status.DONE,
-          title: "Done",
-          taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
-        },
-      } as { [key: string]: ColumnDef },
-      columnOrder: [Status.BACKLOG, Status.TODO, Status.IN_PROGRESS, Status.DONE],
-    };
+  return {
+    columns: {
+      [Status.BACKLOG]: {
+        id: Status.BACKLOG,
+        title: "Backlog",
+        taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
+      },
+      [Status.TODO]: {
+        id: Status.TODO,
+        title: "To do",
+        taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
+      },
+      [Status.IN_PROGRESS]: {
+        id: Status.IN_PROGRESS,
+        title: "In progress",
+        taskIds: groupedTasks.InProgress?.map((item) => item.id) ?? [],
+      },
+      [Status.DONE]: {
+        id: Status.DONE,
+        title: "Done",
+        taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
+      },
+    } as { [key: string]: ColumnDef },
+    columnOrder: [Status.BACKLOG, Status.TODO, Status.IN_PROGRESS, Status.DONE],
   };
 }
 
 export function Board() {
   const { items, updateItem } = useItems();
-  const [state, setState] = useState(getBoardState(items));
+  const [state, setState] = useState(() => getBoardState(items));
 
   useEffect(() => {
-    setState(getBoardState(items)());
+    setState(getBoardState(items));
   }, [items]);
 
   const onDragEnd = async (result: DropResult) => {
