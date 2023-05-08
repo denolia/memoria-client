@@ -147,7 +147,7 @@ app.post("/item/", (req, res) => {
 
 app.delete("/item/:itemId", (req, res) => {
   console.log("Removing item ", req.params.itemId);
-  items.filter((item) => item.id !== req.params.itemId);
+  items = items.filter((item) => item.id !== req.params.itemId);
   res.send("DELETE Request Called");
 });
 
