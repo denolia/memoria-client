@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-const books = [
+let items = [
   {
     type: "Task",
     title: "Позвонить в страховую",
@@ -129,17 +129,26 @@ const books = [
 ];
 
 app.get("/item/all", (req, res) => {
-  res.send(books);
+  res.send(items);
 });
 
 app.get("/item", (req, res) => {
   const { id } = req.query;
-  res.send(books.find((book) => book.id === id));
+  res.send(items.find((book) => book.id === id));
 });
 
-app.post("/item", (req, res) => {
+app.post("/item/", (req, res) => {
   console.log(req.body);
+
+  items = [...items.filter((item) => item.id !== req.body.id), req.body];
+
   res.json(req.body);
+});
+
+app.delete("/item/:itemId", (req, res) => {
+  console.log("Removing item ", req.params.itemId);
+  items.filter((item) => item.id !== req.params.itemId);
+  res.send("DELETE Request Called");
 });
 
 app.get("/", (req, res) => {

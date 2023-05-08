@@ -32,6 +32,7 @@ module.exports = {
     },
   },
   rules: {
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "import/extensions": [
       "error",
       "ignorePackages",
