@@ -33,11 +33,11 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
     const priority = data.get("priority") as string | undefined;
 
     const newItem = {
-      type: "Task",
+      type: currentItem?.type ?? "Task",
       title,
       description,
-      priority,
-      status: Status.BACKLOG,
+      priority: priority ?? Priority.LOW,
+      status: currentItem?.status ?? Status.BACKLOG,
       id: currentItem?.id,
     } as Item;
     const res = await updateItem(newItem);
