@@ -13,7 +13,7 @@ export function Copyright(props: any) {
     >
       Copyright ©
       <Link color="inherit" href="https://juliabubnova.com/">
-        denolia
+        denolia&demoth
       </Link>{" "}
       {new Date().getFullYear()}
     </Typography>
