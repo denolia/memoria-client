@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
@@ -19,12 +19,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
+  const deserializeUser = (): User | null => {
+    const serializedUser = localStorage.getItem("memoria-user");
+
+    return serializedUser ? (JSON.parse(serializedUser) as User) : null;
+  };
+
+  const serializeUser = (userToStore: User) => {
+    // todo encode
+    localStorage.setItem("memoria-user", JSON.stringify(userToStore));
+  };
+
+  useEffect(() => {
+    const savedUser = deserializeUser();
+    // todo decode
+    // todo check if expired
+    if (savedUser) {
+      setUser(savedUser);
+    }
+  }, []);
+
   const logout = () => {
     setUser(null);
   };
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await requestLogin(email, password);
+    if (loggedInUser) serializeUser(loggedInUser);
     setUser(loggedInUser);
     navigate("/");
   };

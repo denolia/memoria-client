@@ -128,6 +128,22 @@ let items = [
   },
 ];
 
+// Uncomment to debug requests
+// let requestCntr = 0;
+// app.use((req, res, next) => {
+//   // eslint-disable-next-line no-plusplus
+//   const thisRequest = requestCntr++;
+//   console.log(`${thisRequest}: ${req.method}, ${req.originalUrl}, `, req.headers);
+//
+//   res.on("close", () => {
+//     console.log(
+//       `${thisRequest}: close response, res.statusCode = ${res.statusCode}, outbound headers: `,
+//       res.getHeaders()
+//     );
+//   });
+//   next();
+// });
+
 app.get("/item/all", (req, res) => {
   res.send(items);
 });
