@@ -26,13 +26,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const serializeUser = (userToStore: User) => {
-    // todo encode
     localStorage.setItem("memoria-user", JSON.stringify(userToStore));
   };
 
   useEffect(() => {
     const savedUser = deserializeUser();
-    // todo decode
     // todo check if expired
     if (savedUser) {
       setUser(savedUser);
