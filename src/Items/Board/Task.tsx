@@ -1,7 +1,9 @@
 import { Draggable } from "@hello-pangea/dnd";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import { createTheme } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { createTheme, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useConfirm } from "material-ui-confirm";
@@ -17,23 +19,82 @@ interface Props {
   taskId: Item["id"];
 }
 
-export default function Task({ order, taskId }: Props) {
-  const { deleteItem, items } = useItems();
+export function ActionMenu({ task }: { task: Item }) {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const { deleteItem } = useItems();
   const navigate = useNavigate();
-
   const confirm = useConfirm();
 
-  const task = items[taskId];
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   const onDelete = async () => {
     try {
       await confirm({ title: "Delete this task?", description: task.title });
-      deleteItem(taskId);
-    } catch {}
+      deleteItem(task.id);
+    } catch {
+      /* empty */
+    }
   };
 
   const onEditItem = () => {
-    navigate(`/edit/${taskId}`);
+    navigate(`/edit/${task.id}`);
   };
+
+  return (
+    <div>
+      <Button
+        id="actions-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+        sx={{ minWidth: "20px" }}
+      >
+        <MoreVertIcon />
+      </Button>
+
+      <Menu
+        id="actions-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "actions-button",
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={onEditItem}>
+          <ListItemIcon>
+            <EditIcon onClick={onEditItem} />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <DeleteOutlineIcon onClick={onDelete} />
+          </ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+}
+
+export default function Task({ order, taskId }: Props) {
+  const { items } = useItems();
+
+  const task = items[taskId];
 
   return task ? (
     <Draggable draggableId={taskId} index={order}>
@@ -48,10 +109,7 @@ export default function Task({ order, taskId }: Props) {
             }}
           >
             <Typography>{task?.title}</Typography>
-            <div>
-              <EditIcon color="secondary" onClick={onEditItem} />
-              <DeleteOutlineIcon color="secondary" onClick={onDelete} />
-            </div>
+            <ActionMenu task={task} />
           </Paper>
         </div>
       )}
