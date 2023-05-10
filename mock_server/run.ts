@@ -148,11 +148,6 @@ app.get("/item/all", (req, res) => {
   res.send(items);
 });
 
-app.get("/item", (req, res) => {
-  const { id } = req.query;
-  res.send(items.find((book) => book.id === id));
-});
-
 app.post("/item/", (req, res) => {
   console.log(req.body);
 
@@ -165,6 +160,10 @@ app.delete("/item/:itemId", (req, res) => {
   console.log("Removing item ", req.params.itemId);
   items = items.filter((item) => item.id !== req.params.itemId);
   res.send("DELETE Request Called");
+});
+
+app.get("/item/:itemId", (req, res) => {
+  res.send(items.find((item) => item.id === req.params.itemId));
 });
 
 app.get("/", (req, res) => {

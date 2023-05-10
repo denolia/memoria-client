@@ -76,13 +76,13 @@ export function ActionMenu({ task }: { task: Item }) {
       >
         <MenuItem onClick={onEditItem}>
           <ListItemIcon>
-            <EditIcon onClick={onEditItem} />
+            <EditIcon />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={onDelete}>
           <ListItemIcon>
-            <DeleteOutlineIcon onClick={onDelete} />
+            <DeleteOutlineIcon />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
