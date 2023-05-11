@@ -17,7 +17,6 @@ interface Props {
 }
 
 function getPriorityColor(priority: string | undefined) {
-  console.log(priority);
   switch (priority) {
     case Priority.LOW:
       return "default";
