@@ -35,7 +35,10 @@ module.exports = {
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
     "no-unused-vars": ["off"],
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",

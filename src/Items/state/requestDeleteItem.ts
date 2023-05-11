@@ -9,6 +9,7 @@ export async function requestDeleteItem(itemId: Item["id"], token: string | unde
       headers: { Authentication: `Bearer ${token}` },
     });
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
   }
   return res;

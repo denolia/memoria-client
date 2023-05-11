@@ -1,6 +1,6 @@
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Avatar, Divider, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";

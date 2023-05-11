@@ -9,6 +9,7 @@ export async function requestUpdateItem(item: Item, token: string | undefined) {
       headers: { Authentication: `Bearer ${token}` },
     });
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
   }
   return res;
