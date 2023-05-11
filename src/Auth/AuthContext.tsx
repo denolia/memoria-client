@@ -7,6 +7,7 @@ import type { User } from "./types";
 
 interface AuthContext {
   user: User | null;
+  userInitials: string;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
@@ -15,9 +16,16 @@ interface AuthContext {
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
 
+function getInitials(name: string | null | undefined) {
+  if (!name) return "";
+
+  return `${name[0]?.toUpperCase()}`;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const userInitials = getInitials(user?.username);
 
   const deserializeUser = (): User | null => {
     const serializedUser = localStorage.getItem("memoria-user");
@@ -39,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("memoria-user");
   };
 
   const login = async (email: string, password: string) => {
@@ -57,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isLoggedIn = Boolean(user?.jwt);
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const value: AuthContext = { user, login, signup, logout, isLoggedIn };
+  const value: AuthContext = { user, userInitials, login, signup, logout, isLoggedIn };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }

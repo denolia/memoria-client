@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { useNavigate } from "react-router";
+import { LoginRequired } from "../../Auth/Login/helpers/LoginRequired";
 
 import { useItems } from "../state/ItemContext";
 import { Board } from "./Board";
@@ -26,7 +27,7 @@ export function BoardView() {
   };
 
   return (
-    <>
+    <LoginRequired>
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
         My items
       </Typography>
@@ -38,6 +39,6 @@ export function BoardView() {
       <Fab color="success" aria-label="add" sx={fabStyle}>
         <AddIcon onClick={onAddItem} />
       </Fab>
-    </>
+    </LoginRequired>
   );
 }
