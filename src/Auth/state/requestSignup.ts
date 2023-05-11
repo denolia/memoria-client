@@ -10,6 +10,7 @@ export async function requestSignup(username: string, password: string) {
     });
     return response.data as User;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     return null;
   }

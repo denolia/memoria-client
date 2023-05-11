@@ -7,16 +7,14 @@ import { ItemsProvider } from "./Items/state/ItemContext";
 
 export function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <AuthProvider>
-          <ItemsProvider>
-            <ConfirmProvider>
-              <AppRoutes />
-            </ConfirmProvider>
-          </ItemsProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <ItemsProvider>
+          <ConfirmProvider>
+            <AppRoutes />
+          </ConfirmProvider>
+        </ItemsProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

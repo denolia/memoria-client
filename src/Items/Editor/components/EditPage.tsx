@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useAuth } from "../../../Auth/AuthContext";
+import { LoginRequired } from "../../../Auth/Login/helpers/LoginRequired";
 import { fetchItemById } from "../../state/fetchItemById";
 import type { Item } from "../../types";
 import { ItemForm } from "./ItemForm";
 
-export function EditPage() {
+function EditPageComponent() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState<Item>();
@@ -30,4 +31,12 @@ export function EditPage() {
   }
 
   return <ItemForm currentItem={item} submitButtonText="Update Item" pageTitle="Edit Item" />;
+}
+
+export function EditPage() {
+  return (
+    <LoginRequired>
+      <EditPageComponent />
+    </LoginRequired>
+  );
 }

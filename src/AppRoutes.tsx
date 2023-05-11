@@ -16,11 +16,11 @@ export function AppRoutes() {
   return (
     <div className="container">
       <Header title="Task tracker" sections={sections} />
-
       <Routes>
         <Route path="/" element={<BoardView />} />
         <Route path="/edit/:id" element={<EditPage />} />
         <Route path="/create" element={<CreateItemPage />} />
+
         <Route path="/login" element={<SignInContainer />} />
         <Route path="/register" element={<SignUpContainer />} />
       </Routes>

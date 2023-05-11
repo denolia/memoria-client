@@ -1,12 +1,16 @@
-import React from "react";
-import Toolbar from "@mui/material/Toolbar";
+import { Logout } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
+import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import Typography from "@mui/material/Typography";
-import { Link as LinkRouter } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import React from "react";
+import { Link as LinkRouter } from "react-router-dom";
 import Logo from "./assets/lighthouse.svg";
+import { useAuth } from "./Auth/AuthContext";
+import { useMuiMenu } from "./helpers/hooks/useMuiMenu";
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -14,6 +18,82 @@ interface HeaderProps {
     url: string;
   }>;
   title: string;
+}
+
+function AccountArea() {
+  const theme = useTheme();
+
+  const { isLoggedIn, userInitials, logout } = useAuth();
+  const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
+
+  const onLogout = () => {
+    logout();
+    handleClose();
+  };
+
+  return (
+    <>
+      {isLoggedIn ? (
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32 }}>{userInitials}</Avatar>
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Button variant="outlined" color="success" size="small">
+          <LinkRouter
+            to="/login"
+            style={{
+              color: theme.palette.primary.dark,
+              textDecoration: "none",
+            }}
+          >
+            Login
+          </LinkRouter>
+        </Button>
+      )}
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        {/* <MenuItem onClick={handleClose}> */}
+        {/*  <Avatar /> Profile */}
+        {/* </MenuItem> */}
+        {/* <MenuItem onClick={handleClose}> */}
+        {/*  <Avatar /> My account */}
+        {/* </MenuItem> */}
+        {/* <Divider /> */}
+        {/* <MenuItem onClick={handleClose}> */}
+        {/*  <ListItemIcon> */}
+        {/*    <PersonAdd fontSize="small" /> */}
+        {/*  </ListItemIcon> */}
+        {/*  Add another account */}
+        {/* </MenuItem> */}
+        {/* <MenuItem onClick={handleClose}> */}
+        {/*  <ListItemIcon> */}
+        {/*    <Settings fontSize="small" /> */}
+        {/*  </ListItemIcon> */}
+        {/*  Settings */}
+        {/* </MenuItem> */}
+        <MenuItem onClick={onLogout}>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </>
+  );
 }
 
 export function Header({ sections, title }: HeaderProps) {
@@ -39,17 +119,7 @@ export function Header({ sections, title }: HeaderProps) {
         <IconButton>
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" color="success" size="small">
-          <LinkRouter
-            to="/login"
-            style={{
-              color: theme.palette.primary.dark,
-              textDecoration: "none",
-            }}
-          >
-            Login
-          </LinkRouter>
-        </Button>
+        <AccountArea />
       </Toolbar>
       <Toolbar
         component="nav"

@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring */
+/* eslint-disable prefer-destructuring, no-console */
 export const ENVIRONMENT = import.meta.env.VITE_ENVIRONMENT;
 export const API = import.meta.env.VITE_API_URL;
 
