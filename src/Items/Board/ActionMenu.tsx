@@ -6,24 +6,15 @@ import Button from "@mui/material/Button";
 import { useConfirm } from "material-ui-confirm";
 import React from "react";
 import { useNavigate } from "react-router";
+import { useMuiMenu } from "../../helpers/hooks/useMuiMenu";
 import { useItems } from "../state/ItemContext";
 import type { Item } from "../types";
 
 export function ActionMenu({ task }: { task: Item }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const { open, anchorEl, handleClick, handleClose } = useMuiMenu();
   const { deleteItem } = useItems();
   const navigate = useNavigate();
   const confirm = useConfirm();
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
 
   const onDelete = async () => {
     try {
