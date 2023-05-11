@@ -33,7 +33,7 @@ function EditPageComponent() {
   return <ItemForm currentItem={item} submitButtonText="Update Item" pageTitle="Edit Item" />;
 }
 
-export default function EditPage() {
+export function EditPage() {
   return (
     <LoginRequired>
       <EditPageComponent />

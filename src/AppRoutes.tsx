@@ -5,7 +5,7 @@ import { SignUpContainer } from "./Auth/Login/containers/SignUpContainer";
 import { Header } from "./Header";
 import { BoardView } from "./Items/Board/BoardView";
 import { CreateItemPage } from "./Items/Editor/components/CreateItemPage";
-import EditPage from "./Items/Editor/components/EditPage";
+import { EditPage } from "./Items/Editor/components/EditPage";
 
 const sections = [
   { title: "Board", url: "/" },
