@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vite",
-    "build:vite": "tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest --colors --testTimeout=100000",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src --config .eslintrc.js",
@@ -12,7 +12,7 @@
     "format": "prettier --write \"{src,mock_server}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "pre-push": "build:vite"
+    "pre-push": "yarn build"
   },
   "engines": {
     "node": ">=14.0.0"
