@@ -16,7 +16,7 @@ let items = [
     type: "Task",
     title: "Позвонить в страховую",
     status: "Backlog",
-    priority: "high",
+    priority: "High",
     creator: {
       name: "demoth",
       id: "645576069832b555e087b69c",
@@ -37,7 +37,7 @@ let items = [
     type: "Task",
     title: "Пополнить баланс",
     status: "Todo",
-    priority: "medium",
+    priority: "Medium",
     creator: {
       name: "demoth",
       id: "645576069832b555e087b69c",
@@ -55,7 +55,7 @@ let items = [
     type: "Task",
     title: "Помыть кухню",
     status: "Backlog",
-    priority: "medium",
+    priority: "Medium",
     creator: {
       name: "denolia",
       id: "645576069832b555e087b69e",
@@ -73,7 +73,7 @@ let items = [
     type: "Task",
     title: "Поиграть в PoE",
     status: "Backlog",
-    priority: "high",
+    priority: "High",
     creator: {
       name: "denolia",
       id: "645576069832b555e087b69e",
@@ -91,7 +91,7 @@ let items = [
     type: "Epic",
     title: "Написать свой ноушен",
     status: "InProgress",
-    priority: "high",
+    priority: "High",
     creator: {
       name: "demoth",
       id: "645576069832b555e087b69c",
@@ -112,7 +112,7 @@ let items = [
     type: "Task",
     title: "Сходить в магазин",
     status: "Done",
-    priority: "low",
+    priority: "Low",
     creator: {
       name: "demoth",
       id: "645576069832b555e087b69c",
