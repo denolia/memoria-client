@@ -91,7 +91,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           sx={{ mt: 1 }}
           label="Due Date"
           inputRef={datePickerRef}
-          defaultValue={dayjs(currentItem?.dueDate)}
+          defaultValue={currentItem?.dueDate ? dayjs(currentItem?.dueDate) : undefined}
         />
 
         <TextField
