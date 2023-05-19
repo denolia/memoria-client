@@ -15,7 +15,7 @@ const sections = [
 export function AppRoutes() {
   return (
     <div className="container">
-      <Header title="Task tracker" sections={sections} />
+      <Header sections={sections} />
       <Routes>
         <Route path="/" element={<BoardView />} />
 

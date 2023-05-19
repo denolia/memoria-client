@@ -20,7 +20,11 @@ export function Column({ column, index, tasks }: Props) {
             elevation={dragSnapshot.isDragging ? 2 : 0}
             sx={{ width: 220, marginX: 1, padding: 1, height: "100%" }}
           >
-            <Typography variant="h5" sx={{ padding: 1 }} {...dragProvided.dragHandleProps}>
+            <Typography
+              variant="h5"
+              sx={{ padding: 1, color: "grey.700" }}
+              {...dragProvided.dragHandleProps}
+            >
               {column.title}
             </Typography>
             <DroppableArea column={column} tasks={tasks} />

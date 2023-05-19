@@ -17,7 +17,6 @@ interface HeaderProps {
     title: string;
     url: string;
   }>;
-  title: string;
 }
 
 function AccountArea() {
@@ -96,25 +95,25 @@ function AccountArea() {
   );
 }
 
-export function Header({ sections, title }: HeaderProps) {
+export function Header({ sections }: HeaderProps) {
   const theme = useTheme();
 
   return (
     <>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         <LinkRouter to="/">
-          <img src={Logo} width="30" height="30" alt="Logo" />
+          <img src={Logo} width="40" height="40" alt="Logo" />
         </LinkRouter>
 
         <Typography
           component="h2"
           variant="h5"
           color="inherit"
-          align="center"
+          align="left"
           noWrap
-          sx={{ flex: 1 }}
+          sx={{ flex: 1, ml: 2, color: "grey.800" }}
         >
-          {title}
+          memoria
         </Typography>
         <IconButton>
           <SearchIcon />
