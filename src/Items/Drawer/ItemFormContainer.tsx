@@ -6,13 +6,11 @@ import { ItemForm } from "./ItemForm";
 export function ItemFormContainer() {
   const { editItem } = useItemDrawer();
 
+  const actionText = `${editItem?.id ? "update" : "create"} item`;
+
   return (
     <LoginRequired>
-      {editItem?.id ? (
-        <ItemForm currentItem={editItem} submitButtonText="update item" pageTitle="edit item" />
-      ) : (
-        <ItemForm submitButtonText="create item" pageTitle="create item" />
-      )}
+      <ItemForm currentItem={editItem} actionText={actionText} />
     </LoginRequired>
   );
 }

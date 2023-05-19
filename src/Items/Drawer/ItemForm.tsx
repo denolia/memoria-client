@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
@@ -15,18 +15,18 @@ import type { Item } from "../types";
 import { Priority, Status } from "../types";
 
 interface Props {
-  submitButtonText: string;
-  pageTitle: string;
-  currentItem?: Item | null;
+  actionText: string;
+  currentItem: Partial<Item>;
 }
 
-export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
+export function ItemForm({ actionText, currentItem }: Props) {
   const { setOpenDrawer } = useItemDrawer();
+  const [item] = useState<Partial<Item>>(currentItem);
   const theme = useTheme();
+  console.log("item", item);
+
   const { updateItem } = useItems();
-
   const datePickerRef = useRef<HTMLInputElement | null>(null);
-
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -42,19 +42,19 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
       : undefined;
 
     const newItem = {
-      type: currentItem?.type ?? "Task",
+      type: item?.type ?? "Task",
       title,
       description,
       priority: priority ?? Priority.LOW,
-      status: currentItem?.status ?? Status.BACKLOG,
-      id: currentItem?.id,
+      status: item?.status ?? Status.BACKLOG,
+      id: item?.id,
       dueDate: mongoFriendlyDueDate,
     } as Item;
 
     const res = await updateItem(newItem);
 
     if (res) {
-      setOpenDrawer(false, null);
+      setOpenDrawer(false, {});
     }
     // todo handle error case
   }
@@ -62,7 +62,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
   return (
     <>
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
-        {pageTitle}
+        {actionText}
       </Typography>
 
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ m: 3 }}>
@@ -73,7 +73,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           id="title"
           label="title"
           name="title"
-          defaultValue={currentItem?.title}
+          defaultValue={item?.title}
           autoFocus
         />
         <FormControl fullWidth>
@@ -83,7 +83,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
             name="priority"
             label="priority"
             id="priority"
-            defaultValue={currentItem?.priority ?? Priority.MEDIUM}
+            defaultValue={item?.priority ?? Priority.MEDIUM}
           >
             <MenuItem value={Priority.LOW}>low</MenuItem>
             <MenuItem value={Priority.MEDIUM}>medium</MenuItem>
@@ -98,7 +98,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
             name="status"
             label="status"
             id="status"
-            defaultValue={currentItem?.status ?? Status.BACKLOG}
+            defaultValue={item?.status ?? Status.BACKLOG}
           >
             <MenuItem value={Status.BACKLOG}>backlog</MenuItem>
             <MenuItem value={Status.TODO}>todo</MenuItem>
@@ -111,7 +111,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           sx={{ mt: 1 }}
           label="due date"
           inputRef={datePickerRef}
-          defaultValue={currentItem?.dueDate ? dayjs(currentItem?.dueDate) : undefined}
+          defaultValue={item?.dueDate ? dayjs(item?.dueDate) : undefined}
         />
 
         <TextField
@@ -122,11 +122,11 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           name="description"
           label="description"
           id="description"
-          defaultValue={currentItem?.description}
+          defaultValue={item?.description}
         />
 
         <Button type="submit" fullWidth variant="contained" color="success" sx={{ mt: 3, mb: 2 }}>
-          {submitButtonText}
+          {actionText}
         </Button>
       </Box>
     </>

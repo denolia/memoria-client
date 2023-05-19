@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import type { Item } from "../types";
 
 interface ItemDrawerContext {
-  editItem: Item | null;
+  editItem: Partial<Item>;
   openDrawer: boolean;
-  setOpenDrawer: (open: boolean, item: Item | null) => void;
+  setOpenDrawer: (open: boolean, item: Partial<Item>) => void;
 }
 
 const Context = React.createContext<ItemDrawerContext | undefined>(undefined);
 
 export function ItemDrawerProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<ItemDrawerContext>({
-    editItem: null,
+    editItem: {},
     openDrawer: false,
     setOpenDrawer: () => {},
   });
 
-  const setOpenDrawer = (openDrawer: boolean, editItem: Item | null) => {
+  const setOpenDrawer = (openDrawer: boolean, editItem: Partial<Item>) => {
+    console.log("setOpenDrawer", openDrawer, editItem);
     setState(({ openDrawer: _, editItem: __, ...rest }) => ({
       openDrawer,
       editItem,
