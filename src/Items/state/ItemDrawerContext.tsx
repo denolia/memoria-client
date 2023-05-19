@@ -2,38 +2,30 @@ import React, { useState } from "react";
 import type { Item } from "../types";
 
 interface ItemDrawerContext {
-  editItemId: Item["id"] | null;
+  editItem: Item | null;
   openDrawer: boolean;
-  setEditItem: (_: Item["id"] | null) => void;
-  setOpenDrawer: (_: boolean) => void;
+  setOpenDrawer: (open: boolean, item: Item | null) => void;
 }
 
 const Context = React.createContext<ItemDrawerContext | undefined>(undefined);
 
 export function ItemDrawerProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<ItemDrawerContext>({
-    editItemId: null,
+    editItem: null,
     openDrawer: false,
-    setEditItem: () => {},
     setOpenDrawer: () => {},
   });
 
-  const setEditItem = (editItemId: Item["id"] | null) => {
-    setState(({ editItemId: _, ...rest }) => ({
-      editItemId,
-      ...rest,
-    }));
-  };
-
-  const setOpenDrawer = (openDrawer: boolean) => {
-    setState(({ openDrawer: _, ...rest }) => ({
+  const setOpenDrawer = (openDrawer: boolean, editItem: Item | null) => {
+    setState(({ openDrawer: _, editItem: __, ...rest }) => ({
       openDrawer,
+      editItem,
       ...rest,
     }));
   };
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const value = { ...state, setEditItem, setOpenDrawer };
+  const value = { ...state, setOpenDrawer };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }

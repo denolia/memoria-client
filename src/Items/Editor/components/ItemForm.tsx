@@ -17,7 +17,7 @@ import { Priority, Status } from "../../types";
 interface Props {
   submitButtonText: string;
   pageTitle: string;
-  currentItem?: Item;
+  currentItem?: Item | null;
 }
 
 export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
@@ -37,6 +37,10 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
 
     const selectedDate = datePickerRef.current?.value;
 
+    const mongoFriendlyDueDate = selectedDate
+      ? dayjs(selectedDate).format("YYYY-MM-DD")
+      : undefined;
+
     const newItem = {
       type: currentItem?.type ?? "Task",
       title,
@@ -44,13 +48,13 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
       priority: priority ?? Priority.LOW,
       status: currentItem?.status ?? Status.BACKLOG,
       id: currentItem?.id,
-      dueDate: selectedDate,
+      dueDate: mongoFriendlyDueDate,
     } as Item;
 
     const res = await updateItem(newItem);
 
     if (res) {
-      setOpenDrawer(false);
+      setOpenDrawer(false, null);
     }
     // todo handle error case
   }

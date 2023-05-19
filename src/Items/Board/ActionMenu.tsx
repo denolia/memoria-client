@@ -13,7 +13,7 @@ import type { Item } from "../types";
 export function ActionMenu({ task }: { task: Item }) {
   const { open, anchorEl, handleClick, handleClose } = useMuiMenu();
   const { deleteItem } = useItems();
-  const { setOpenDrawer, setEditItem } = useItemDrawer();
+  const { setOpenDrawer } = useItemDrawer();
   const confirm = useConfirm();
 
   const onDelete = async () => {
@@ -26,8 +26,8 @@ export function ActionMenu({ task }: { task: Item }) {
   };
 
   const onEditItem = () => {
-    setEditItem(task.id);
-    setOpenDrawer(true);
+    setOpenDrawer(true, task);
+    handleClose();
   };
 
   return (
