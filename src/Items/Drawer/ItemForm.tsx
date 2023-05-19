@@ -20,9 +20,7 @@ interface Props {
 
 export function ItemForm({ actionText }: Props) {
   const { setOpenDrawer, editItem } = useItemDrawer();
-  const item = editItem;
   const theme = useTheme();
-  console.log("item", item);
 
   const { updateItem } = useItems();
   const datePickerRef = useRef<HTMLInputElement | null>(null);
@@ -33,6 +31,7 @@ export function ItemForm({ actionText }: Props) {
     const title = data.get("title") as string | undefined;
     const description = data.get("description") as string | undefined;
     const priority = data.get("priority") as string | undefined;
+    const status = data.get("status") as Status | undefined;
 
     const selectedDate = datePickerRef.current?.value;
 
@@ -41,12 +40,12 @@ export function ItemForm({ actionText }: Props) {
       : undefined;
 
     const newItem = {
-      type: item?.type ?? "Task",
+      type: editItem?.type ?? "Task",
       title,
       description,
       priority: priority ?? Priority.LOW,
-      status: item?.status ?? Status.BACKLOG,
-      id: item?.id,
+      status: status ?? editItem?.status ?? Status.BACKLOG,
+      id: editItem?.id,
       dueDate: mongoFriendlyDueDate,
     } as Item;
 
@@ -72,7 +71,7 @@ export function ItemForm({ actionText }: Props) {
           id="title"
           label="title"
           name="title"
-          defaultValue={item?.title}
+          defaultValue={editItem?.title}
           autoFocus
         />
         <FormControl fullWidth>
@@ -82,7 +81,7 @@ export function ItemForm({ actionText }: Props) {
             name="priority"
             label="priority"
             id="priority"
-            defaultValue={item?.priority ?? Priority.MEDIUM}
+            defaultValue={editItem?.priority ?? Priority.MEDIUM}
           >
             <MenuItem value={Priority.LOW}>low</MenuItem>
             <MenuItem value={Priority.MEDIUM}>medium</MenuItem>
@@ -97,7 +96,7 @@ export function ItemForm({ actionText }: Props) {
             name="status"
             label="status"
             id="status"
-            defaultValue={item?.status ?? Status.BACKLOG}
+            defaultValue={editItem?.status ?? Status.BACKLOG}
           >
             <MenuItem value={Status.BACKLOG}>backlog</MenuItem>
             <MenuItem value={Status.TODO}>todo</MenuItem>
@@ -110,7 +109,7 @@ export function ItemForm({ actionText }: Props) {
           sx={{ mt: 1 }}
           label="due date"
           inputRef={datePickerRef}
-          defaultValue={item?.dueDate ? dayjs(item?.dueDate) : undefined}
+          defaultValue={editItem?.dueDate ? dayjs(editItem?.dueDate) : undefined}
         />
 
         <TextField
@@ -121,7 +120,7 @@ export function ItemForm({ actionText }: Props) {
           name="description"
           label="description"
           id="description"
-          defaultValue={item?.description}
+          defaultValue={editItem?.description}
         />
 
         <Button type="submit" fullWidth variant="contained" color="success" sx={{ mt: 3, mb: 2 }}>
