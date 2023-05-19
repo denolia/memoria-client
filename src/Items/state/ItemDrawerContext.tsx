@@ -4,7 +4,7 @@ import type { Item } from "../types";
 interface ItemDrawerContext {
   editItem: Partial<Item>;
   openDrawer: boolean;
-  setOpenDrawer: (open: boolean, item: Partial<Item>) => void;
+  setOpenDrawer: (open: boolean, item?: Partial<Item>) => void;
 }
 
 const Context = React.createContext<ItemDrawerContext | undefined>(undefined);
@@ -16,11 +16,10 @@ export function ItemDrawerProvider({ children }: { children: React.ReactNode }) 
     setOpenDrawer: () => {},
   });
 
-  const setOpenDrawer = (openDrawer: boolean, editItem: Partial<Item>) => {
-    console.log("setOpenDrawer", openDrawer, editItem);
-    setState(({ openDrawer: _, editItem: __, ...rest }) => ({
+  const setOpenDrawer = (openDrawer: boolean, editItem?: Partial<Item>) => {
+    setState(({ openDrawer: _, editItem: currentEditItem, ...rest }) => ({
       openDrawer,
-      editItem,
+      editItem: openDrawer ? editItem ?? {} : currentEditItem,
       ...rest,
     }));
   };

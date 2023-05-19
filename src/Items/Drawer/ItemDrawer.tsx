@@ -10,7 +10,7 @@ export function ItemDrawer() {
       anchor="right"
       // hideBackdrop
       open={openDrawer}
-      onClose={() => setOpenDrawer(false, null)}
+      onClose={() => setOpenDrawer(false)}
     >
       <ItemFormContainer />
     </Drawer>

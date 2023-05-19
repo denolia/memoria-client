@@ -10,7 +10,7 @@ export function ItemFormContainer() {
 
   return (
     <LoginRequired>
-      <ItemForm currentItem={editItem} actionText={actionText} />
+      <ItemForm actionText={actionText} />
     </LoginRequired>
   );
 }

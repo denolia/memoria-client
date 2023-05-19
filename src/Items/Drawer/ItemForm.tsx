@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
@@ -16,12 +16,11 @@ import { Priority, Status } from "../types";
 
 interface Props {
   actionText: string;
-  currentItem: Partial<Item>;
 }
 
-export function ItemForm({ actionText, currentItem }: Props) {
-  const { setOpenDrawer } = useItemDrawer();
-  const [item] = useState<Partial<Item>>(currentItem);
+export function ItemForm({ actionText }: Props) {
+  const { setOpenDrawer, editItem } = useItemDrawer();
+  const item = editItem;
   const theme = useTheme();
   console.log("item", item);
 
@@ -54,7 +53,7 @@ export function ItemForm({ actionText, currentItem }: Props) {
     const res = await updateItem(newItem);
 
     if (res) {
-      setOpenDrawer(false, {});
+      setOpenDrawer(false);
     }
     // todo handle error case
   }

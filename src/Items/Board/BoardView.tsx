@@ -4,7 +4,6 @@ import { LoginRequired } from "../../Auth/Login/helpers/LoginRequired";
 import { ItemDrawer } from "../Drawer/ItemDrawer";
 import { ItemDrawerProvider } from "../state/ItemDrawerContext";
 import { Board } from "./Board";
-import { CreateItemFab } from "./CreateItemFab";
 
 export function BoardView() {
   return (
@@ -15,8 +14,6 @@ export function BoardView() {
         </Box>
 
         <ItemDrawer />
-
-        <CreateItemFab />
       </ItemDrawerProvider>
     </LoginRequired>
   );
