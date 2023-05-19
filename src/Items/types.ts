@@ -20,7 +20,7 @@ export interface Item {
   id: string;
   type: ItemType;
   title?: string;
-  status: string;
+  status: Status;
   priority: Priority;
   creator: {
     name: string;
@@ -43,7 +43,7 @@ export interface IndexedItems {
 }
 
 export interface ColumnDef {
-  id: string;
+  id: Status;
   title: string;
   taskIds: string[];
 }
