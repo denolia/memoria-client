@@ -47,7 +47,7 @@ export function Board() {
     setState(getBoardState(items));
   }, [items]);
 
-  const onDragEnd = async (result: DropResult) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, type } = result;
 
     if (!destination) return;

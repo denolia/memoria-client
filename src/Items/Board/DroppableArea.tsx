@@ -16,11 +16,15 @@ export function DroppableArea({ column, tasks }: Props) {
   return (
     <Droppable droppableId={column.id}>
       {(dropProvided, dropSnapshot) => (
-        <div {...dropProvided.droppableProps} ref={dropProvided.innerRef}>
+        <div
+          {...dropProvided.droppableProps}
+          ref={dropProvided.innerRef}
+          style={{ height: "100%" }}
+        >
           <Stack
             spacing={1}
             sx={{
-              minHeight: 100,
+              height: "100%",
               padding: 1,
               backgroundColor: dropSnapshot.isDraggingOver ? theme.palette.grey["300"] : "white",
               transition: `background-color 0.2s ${theme.transitions.easing.easeOut}`,

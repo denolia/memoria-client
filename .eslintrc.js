@@ -11,6 +11,7 @@ module.exports = {
     },
     ecmaVersion: "latest",
     sourceType: "module",
+    project: ["tsconfig.json"],
   },
   plugins: ["react", "@typescript-eslint"],
   overrides: [
@@ -39,6 +40,8 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
     ],
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": "error",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -60,5 +63,13 @@ module.exports = {
     ],
     "import/prefer-default-export": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "@typescript-eslint/no-unsafe-enum-comparison": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "error",
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "@typescript-eslint/prefer-reduce-type-parameter": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "require-await": "off",
+    "@typescript-eslint/require-await": "error",
   },
 };

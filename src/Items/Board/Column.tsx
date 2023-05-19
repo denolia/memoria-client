@@ -18,7 +18,7 @@ export function Column({ column, index, tasks }: Props) {
         <div {...dragProvided.draggableProps} ref={dragProvided.innerRef}>
           <Paper
             elevation={dragSnapshot.isDragging ? 2 : 0}
-            sx={{ width: 220, marginX: 1, padding: 1 }}
+            sx={{ width: 220, marginX: 1, padding: 1, height: "100%" }}
           >
             <Typography variant="h5" sx={{ padding: 1 }} {...dragProvided.dragHandleProps}>
               {column.title}

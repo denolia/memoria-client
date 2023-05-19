@@ -4,8 +4,10 @@ import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import type { FormEvent } from "react";
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router";
 
 import { useItems } from "../../state/ItemContext";
@@ -21,8 +23,9 @@ interface Props {
 export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
   const navigate = useNavigate();
   const theme = useTheme();
-
   const { updateItem } = useItems();
+
+  const datePickerRef = useRef<HTMLInputElement | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,6 +35,8 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
     const description = data.get("description") as string | undefined;
     const priority = data.get("priority") as string | undefined;
 
+    const selectedDate = datePickerRef.current?.value;
+
     const newItem = {
       type: currentItem?.type ?? "Task",
       title,
@@ -39,7 +44,9 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
       priority: priority ?? Priority.LOW,
       status: currentItem?.status ?? Status.BACKLOG,
       id: currentItem?.id,
+      dueDate: selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined,
     } as Item;
+
     const res = await updateItem(newItem);
 
     if (res) {
@@ -69,16 +76,23 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           <InputLabel id="priority">Priority</InputLabel>
           <Select
             labelId="priority"
-            id="priority"
-            defaultValue={currentItem?.priority}
-            label="Priority"
             name="priority"
+            label="Priority"
+            id="priority"
+            defaultValue={currentItem?.priority ?? Priority.MEDIUM}
           >
             <MenuItem value={Priority.LOW}>Low</MenuItem>
             <MenuItem value={Priority.MEDIUM}>Medium</MenuItem>
             <MenuItem value={Priority.HIGH}>High</MenuItem>
           </Select>
         </FormControl>
+
+        <DatePicker
+          sx={{ mt: 1 }}
+          label="Due Date"
+          inputRef={datePickerRef}
+          defaultValue={currentItem?.dueDate ? dayjs(currentItem?.dueDate) : undefined}
+        />
 
         <TextField
           margin="normal"

@@ -3,6 +3,7 @@ import { Chip, createTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 import React from "react";
 import { useItems } from "../state/ItemContext";
 import { Priority } from "../types";
@@ -29,6 +30,14 @@ function getPriorityColor(priority: string | undefined) {
   }
 }
 
+function TaskDueDateLabel({ dueDate }: { dueDate: Item["dueDate"] }) {
+  return dueDate ? (
+    <Typography variant="body2" sx={{ color: "grey.600", mb: 1 }}>
+      {dayjs(dueDate).format("MMM D")}
+    </Typography>
+  ) : null;
+}
+
 export default function Task({ order, taskId }: Props) {
   const { items } = useItems();
 
@@ -44,16 +53,18 @@ export default function Task({ order, taskId }: Props) {
               backgroundColor: snapshot.isDragging ? darkTheme.palette.primary.light : "white",
             }}
           >
-            <Box sx={{ display: "flex" }}>
-              <Typography sx={{ flexGrow: 1 }}>{task?.title}</Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ flexGrow: 1 }}>{task.title}</Typography>
               <ActionMenu task={task} />
             </Box>
 
+            <TaskDueDateLabel dueDate={task.dueDate} />
+
             <Chip
               size="small"
-              variant={task?.priority === Priority.HIGH ? "filled" : "outlined"}
-              label={task?.priority}
-              color={getPriorityColor(task?.priority)}
+              variant={task.priority === Priority.HIGH ? "filled" : "outlined"}
+              label={task.priority}
+              color={getPriorityColor(task.priority)}
             />
           </Paper>
         </div>

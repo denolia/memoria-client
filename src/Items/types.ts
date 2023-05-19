@@ -21,7 +21,7 @@ export interface Item {
   type: ItemType;
   title?: string;
   status: string;
-  priority: string;
+  priority: Priority;
   creator: {
     name: string;
     id: string;

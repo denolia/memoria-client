@@ -21,8 +21,8 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     items: {},
     loading: true,
     getAllItems: () => {},
-    updateItem: async () => true,
-    deleteItem: async () => true,
+    updateItem: async () => new Promise(() => {}),
+    deleteItem: async () => new Promise(() => {}),
   });
   const { user, isLoggedIn } = useAuth();
 
