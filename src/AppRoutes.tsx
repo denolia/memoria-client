@@ -6,10 +6,10 @@ import { Header } from "./Header";
 import { BoardView } from "./Items/Board/BoardView";
 
 const sections = [
-  { title: "Board", url: "/" },
-  { title: "Calendar", url: "/calendar" },
-  { title: "Epics", url: "/epics" },
-  { title: "Triage", url: "/triage" },
+  { title: "board", url: "/" },
+  { title: "calendar", url: "/calendar" },
+  { title: "epics", url: "/epics" },
+  { title: "triage", url: "/triage" },
 ];
 
 export function AppRoutes() {

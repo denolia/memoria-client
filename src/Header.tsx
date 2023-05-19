@@ -108,7 +108,6 @@ export function Header({ sections }: HeaderProps) {
         <Typography
           component="h2"
           variant="h5"
-          color="inherit"
           align="left"
           noWrap
           sx={{ flex: 1, ml: 2, color: "grey.800" }}

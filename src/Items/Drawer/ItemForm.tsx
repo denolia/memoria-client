@@ -71,29 +71,45 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           required
           fullWidth
           id="title"
-          label="Title"
+          label="title"
           name="title"
           defaultValue={currentItem?.title}
           autoFocus
         />
         <FormControl fullWidth>
-          <InputLabel id="priority">Priority</InputLabel>
+          <InputLabel id="priority">priority</InputLabel>
           <Select
             labelId="priority"
             name="priority"
-            label="Priority"
+            label="priority"
             id="priority"
             defaultValue={currentItem?.priority ?? Priority.MEDIUM}
           >
-            <MenuItem value={Priority.LOW}>Low</MenuItem>
-            <MenuItem value={Priority.MEDIUM}>Medium</MenuItem>
-            <MenuItem value={Priority.HIGH}>High</MenuItem>
+            <MenuItem value={Priority.LOW}>low</MenuItem>
+            <MenuItem value={Priority.MEDIUM}>medium</MenuItem>
+            <MenuItem value={Priority.HIGH}>high</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth sx={{ mt: 1 }}>
+          <InputLabel id="status">status</InputLabel>
+          <Select
+            labelId="status"
+            name="status"
+            label="status"
+            id="status"
+            defaultValue={currentItem?.status ?? Status.BACKLOG}
+          >
+            <MenuItem value={Status.BACKLOG}>backlog</MenuItem>
+            <MenuItem value={Status.TODO}>todo</MenuItem>
+            <MenuItem value={Status.IN_PROGRESS}>in progress</MenuItem>
+            <MenuItem value={Status.DONE}>done</MenuItem>
           </Select>
         </FormControl>
 
         <DatePicker
           sx={{ mt: 1 }}
-          label="Due Date"
+          label="due date"
           inputRef={datePickerRef}
           defaultValue={currentItem?.dueDate ? dayjs(currentItem?.dueDate) : undefined}
         />
@@ -104,7 +120,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           multiline
           rows={3}
           name="description"
-          label="Description"
+          label="description"
           id="description"
           defaultValue={currentItem?.description}
         />

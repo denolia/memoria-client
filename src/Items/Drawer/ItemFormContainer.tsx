@@ -8,10 +8,10 @@ export function ItemFormContainer() {
 
   return (
     <LoginRequired>
-      {editItem ? (
-        <ItemForm currentItem={editItem} submitButtonText="Update Item" pageTitle="Edit Item" />
+      {editItem?.id ? (
+        <ItemForm currentItem={editItem} submitButtonText="update item" pageTitle="edit item" />
       ) : (
-        <ItemForm submitButtonText="Create Item" pageTitle="Create New Item" />
+        <ItemForm submitButtonText="create item" pageTitle="create item" />
       )}
     </LoginRequired>
   );
