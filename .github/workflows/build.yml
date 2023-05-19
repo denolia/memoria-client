@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "dev", "main" ]
 
+env:
+  VITE_ENVIRONMENT: production
+  VITE_API_URL: /api/
+
 jobs:
   build:
     name: Build
