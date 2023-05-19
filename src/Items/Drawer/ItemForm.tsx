@@ -8,25 +8,22 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
 import React, { useRef } from "react";
-import { useNavigate } from "react-router";
 
-import { useItems } from "../../state/ItemContext";
-import { Priority, Status } from "../../types";
-import type { Item } from "../../types";
+import { useItems } from "../state/ItemContext";
+import { useItemDrawer } from "../state/ItemDrawerContext";
+import type { Item } from "../types";
+import { Priority, Status } from "../types";
 
 interface Props {
-  submitButtonText: string;
-  pageTitle: string;
-  currentItem?: Item;
+  actionText: string;
 }
 
-export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
-  const navigate = useNavigate();
+export function ItemForm({ actionText }: Props) {
+  const { setOpenDrawer, editItem } = useItemDrawer();
   const theme = useTheme();
+
   const { updateItem } = useItems();
-
   const datePickerRef = useRef<HTMLInputElement | null>(null);
-
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -34,23 +31,28 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
     const title = data.get("title") as string | undefined;
     const description = data.get("description") as string | undefined;
     const priority = data.get("priority") as string | undefined;
+    const status = data.get("status") as Status | undefined;
 
     const selectedDate = datePickerRef.current?.value;
 
+    const mongoFriendlyDueDate = selectedDate
+      ? dayjs(selectedDate).format("YYYY-MM-DD")
+      : undefined;
+
     const newItem = {
-      type: currentItem?.type ?? "Task",
+      type: editItem?.type ?? "Task",
       title,
       description,
       priority: priority ?? Priority.LOW,
-      status: currentItem?.status ?? Status.BACKLOG,
-      id: currentItem?.id,
-      dueDate: selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined,
+      status: status ?? editItem?.status ?? Status.BACKLOG,
+      id: editItem?.id,
+      dueDate: mongoFriendlyDueDate,
     } as Item;
 
     const res = await updateItem(newItem);
 
     if (res) {
-      navigate("/");
+      setOpenDrawer(false);
     }
     // todo handle error case
   }
@@ -58,7 +60,7 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
   return (
     <>
       <Typography variant="h4" gutterBottom marginLeft={theme.spacing(3)}>
-        {pageTitle}
+        {actionText}
       </Typography>
 
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ m: 3 }}>
@@ -67,31 +69,47 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           required
           fullWidth
           id="title"
-          label="Title"
+          label="title"
           name="title"
-          defaultValue={currentItem?.title}
+          defaultValue={editItem?.title}
           autoFocus
         />
         <FormControl fullWidth>
-          <InputLabel id="priority">Priority</InputLabel>
+          <InputLabel id="priority">priority</InputLabel>
           <Select
             labelId="priority"
             name="priority"
-            label="Priority"
+            label="priority"
             id="priority"
-            defaultValue={currentItem?.priority ?? Priority.MEDIUM}
+            defaultValue={editItem?.priority ?? Priority.MEDIUM}
           >
-            <MenuItem value={Priority.LOW}>Low</MenuItem>
-            <MenuItem value={Priority.MEDIUM}>Medium</MenuItem>
-            <MenuItem value={Priority.HIGH}>High</MenuItem>
+            <MenuItem value={Priority.LOW}>low</MenuItem>
+            <MenuItem value={Priority.MEDIUM}>medium</MenuItem>
+            <MenuItem value={Priority.HIGH}>high</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth sx={{ mt: 1 }}>
+          <InputLabel id="status">status</InputLabel>
+          <Select
+            labelId="status"
+            name="status"
+            label="status"
+            id="status"
+            defaultValue={editItem?.status ?? Status.BACKLOG}
+          >
+            <MenuItem value={Status.BACKLOG}>backlog</MenuItem>
+            <MenuItem value={Status.TODO}>todo</MenuItem>
+            <MenuItem value={Status.IN_PROGRESS}>in progress</MenuItem>
+            <MenuItem value={Status.DONE}>done</MenuItem>
           </Select>
         </FormControl>
 
         <DatePicker
           sx={{ mt: 1 }}
-          label="Due Date"
+          label="due date"
           inputRef={datePickerRef}
-          defaultValue={currentItem?.dueDate ? dayjs(currentItem?.dueDate) : undefined}
+          defaultValue={editItem?.dueDate ? dayjs(editItem?.dueDate) : undefined}
         />
 
         <TextField
@@ -100,13 +118,13 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
           multiline
           rows={3}
           name="description"
-          label="Description"
+          label="description"
           id="description"
-          defaultValue={currentItem?.description}
+          defaultValue={editItem?.description}
         />
 
         <Button type="submit" fullWidth variant="contained" color="success" sx={{ mt: 3, mb: 2 }}>
-          {submitButtonText}
+          {actionText}
         </Button>
       </Box>
     </>

@@ -16,22 +16,22 @@ function getBoardState(indexedItems: IndexedItems) {
     columns: {
       [Status.BACKLOG]: {
         id: Status.BACKLOG,
-        title: "Backlog",
+        title: "backlog",
         taskIds: groupedTasks.Backlog?.map((item) => item.id) ?? [],
       },
       [Status.TODO]: {
         id: Status.TODO,
-        title: "To do",
+        title: "todo",
         taskIds: groupedTasks.Todo?.map((item) => item.id) ?? [],
       },
       [Status.IN_PROGRESS]: {
         id: Status.IN_PROGRESS,
-        title: "In progress",
+        title: "in progress",
         taskIds: groupedTasks.InProgress?.map((item) => item.id) ?? [],
       },
       [Status.DONE]: {
         id: Status.DONE,
-        title: "Done",
+        title: "done",
         taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
       },
     } as { [key: string]: ColumnDef },
