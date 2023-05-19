@@ -69,5 +69,7 @@ module.exports = {
     "@typescript-eslint/prefer-optional-chain": "error",
     "@typescript-eslint/prefer-reduce-type-parameter": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "require-await": "off",
+    "@typescript-eslint/require-await": "error",
   },
 };
