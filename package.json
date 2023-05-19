@@ -12,7 +12,8 @@
     "format": "prettier --write \"{src,mock_server}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "pre-push": "yarn build"
+    "pre-push": "yarn build",
+    "ci": "yarn install --immutable --immutable-cache --check-cache"
   },
   "engines": {
     "node": ">=14.0.0"
