@@ -5,15 +5,15 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useConfirm } from "material-ui-confirm";
 import React from "react";
-import { useNavigate } from "react-router";
 import { useMuiMenu } from "../../helpers/hooks/useMuiMenu";
 import { useItems } from "../state/ItemContext";
+import { useItemDrawer } from "../state/ItemDrawerContext";
 import type { Item } from "../types";
 
 export function ActionMenu({ task }: { task: Item }) {
   const { open, anchorEl, handleClick, handleClose } = useMuiMenu();
   const { deleteItem } = useItems();
-  const navigate = useNavigate();
+  const { setOpenDrawer, setEditItem } = useItemDrawer();
   const confirm = useConfirm();
 
   const onDelete = async () => {
@@ -26,7 +26,8 @@ export function ActionMenu({ task }: { task: Item }) {
   };
 
   const onEditItem = () => {
-    navigate(`/edit/${task.id}`);
+    setEditItem(task.id);
+    setOpenDrawer(true);
   };
 
   return (

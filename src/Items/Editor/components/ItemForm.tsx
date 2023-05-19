@@ -8,11 +8,11 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
 import React, { useRef } from "react";
-import { useNavigate } from "react-router";
 
 import { useItems } from "../../state/ItemContext";
-import { Priority, Status } from "../../types";
+import { useItemDrawer } from "../../state/ItemDrawerContext";
 import type { Item } from "../../types";
+import { Priority, Status } from "../../types";
 
 interface Props {
   submitButtonText: string;
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
-  const navigate = useNavigate();
+  const { setOpenDrawer } = useItemDrawer();
   const theme = useTheme();
   const { updateItem } = useItems();
 
@@ -44,13 +44,13 @@ export function ItemForm({ submitButtonText, currentItem, pageTitle }: Props) {
       priority: priority ?? Priority.LOW,
       status: currentItem?.status ?? Status.BACKLOG,
       id: currentItem?.id,
-      dueDate: selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined,
+      dueDate: selectedDate,
     } as Item;
 
     const res = await updateItem(newItem);
 
     if (res) {
-      navigate("/");
+      setOpenDrawer(false);
     }
     // todo handle error case
   }
