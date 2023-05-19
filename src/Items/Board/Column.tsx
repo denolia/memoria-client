@@ -19,7 +19,7 @@ export function Column({ column, index, tasks }: Props) {
   const { setOpenDrawer } = useItemDrawer();
 
   const onAddItem = (col: ColumnDef) => {
-    setOpenDrawer(true, { status: col.id } as Item);
+    setOpenDrawer(true, { status: col.id });
   };
 
   return (
