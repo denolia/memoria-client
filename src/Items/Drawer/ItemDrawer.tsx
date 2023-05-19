@@ -1,6 +1,6 @@
 import { Drawer } from "@mui/material";
 import React from "react";
-import { ItemFormContainer } from "../Editor/components/ItemFormContainer";
+import { ItemFormContainer } from "./ItemFormContainer";
 import { useItemDrawer } from "../state/ItemDrawerContext";
 
 export function ItemDrawer() {

@@ -9,10 +9,10 @@ import dayjs from "dayjs";
 import type { FormEvent } from "react";
 import React, { useRef } from "react";
 
-import { useItems } from "../../state/ItemContext";
-import { useItemDrawer } from "../../state/ItemDrawerContext";
-import type { Item } from "../../types";
-import { Priority, Status } from "../../types";
+import { useItems } from "../state/ItemContext";
+import { useItemDrawer } from "../state/ItemDrawerContext";
+import type { Item } from "../types";
+import { Priority, Status } from "../types";
 
 interface Props {
   submitButtonText: string;

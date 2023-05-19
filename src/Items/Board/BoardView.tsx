@@ -8,7 +8,7 @@ import { useItems } from "../state/ItemContext";
 import { ItemDrawerProvider } from "../state/ItemDrawerContext";
 import { Board } from "./Board";
 import { CreateItemFab } from "./CreateItemFab";
-import { ItemDrawer } from "./ItemDrawer";
+import { ItemDrawer } from "../Drawer/ItemDrawer";
 
 export function BoardView() {
   const { items } = useItems();
