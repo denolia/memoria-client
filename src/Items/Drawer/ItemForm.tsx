@@ -123,6 +123,12 @@ export function ItemForm({ actionText }: Props) {
           defaultValue={editItem?.description}
         />
 
+        {editItem?.id && (
+          <Typography variant="body2" color="grey.600">
+            Created by: {editItem.creator?.name ?? "unknown"}
+          </Typography>
+        )}
+
         <Button type="submit" fullWidth variant="contained" color="success" sx={{ mt: 3, mb: 2 }}>
           {actionText}
         </Button>
