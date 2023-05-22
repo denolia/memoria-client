@@ -125,7 +125,7 @@ export function ItemForm({ actionText }: Props) {
 
         {editItem?.id && (
           <Typography variant="body2" color="grey.600">
-            Created by: {editItem.creator?.name ?? "unknown"}
+            Created by: {editItem.creator?.name ?? "unknown"} on {editItem.created}
           </Typography>
         )}
 
