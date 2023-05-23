@@ -1,18 +1,17 @@
 import type {
-  EventChangeArg,
   DateSelectArg,
+  EventChangeArg,
   EventClickArg,
   EventContentArg,
 } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
-import type { Item, IndexedItems } from "../types";
+import type { IndexedItems, Item } from "../types";
 
 function renderEventContent(eventContent: EventContentArg) {
   return (
@@ -59,11 +58,11 @@ export function Calendar({ items }: { items: IndexedItems }) {
     <div className="demo-app">
       <div className="demo-app-main">
         <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, interactionPlugin]}
           headerToolbar={{
             left: "prev,next today",
             center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
+            right: "dayGridMonth",
           }}
           initialView="dayGridMonth"
           editable
