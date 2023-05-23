@@ -1,19 +1,18 @@
-import type { DateSelectArg, EventClickArg, EventContentArg } from "@fullcalendar/core";
+import type {
+  EventChangeArg,
+  DateSelectArg,
+  EventClickArg,
+  EventContentArg,
+} from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useMemo } from "react";
+import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
-import type { IndexedItems } from "../types";
-
-let eventGuid = 0;
-
-export function createEventId() {
-  eventGuid += 1;
-  return String(eventGuid);
-}
+import type { Item, IndexedItems } from "../types";
 
 function renderEventContent(eventContent: EventContentArg) {
   return (
@@ -26,22 +25,35 @@ function renderEventContent(eventContent: EventContentArg) {
 export function Calendar({ items }: { items: IndexedItems }) {
   const { setOpenDrawer } = useItemDrawer();
 
-  // todo memoise this
-  const initialEvents = Object.values(items).map((item) => ({
-    ...item,
-    date: item.dueDate ?? undefined,
-  }));
+  const { updateItem } = useItems();
+
+  const initialEvents = useMemo(
+    () =>
+      Object.values(items).map((item) => ({
+        ...item,
+        date: item.dueDate ?? undefined,
+      })),
+    [items]
+  );
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     setOpenDrawer(true, { dueDate: dayjs(selectInfo.startStr).format("YYYY-MM-DD") });
   };
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    setOpenDrawer(true, items[clickInfo.event.id]);
   };
+
+  function onEventChange(eventData: EventChangeArg) {
+    const { id } = eventData.event;
+    const dueDate = dayjs(eventData.event.startStr).format("YYYY-MM-DD");
+    if (!id || !dueDate) {
+      return;
+    }
+
+    const updatedTask: Item = { ...items[id], dueDate };
+    updateItem(updatedTask);
+  }
 
   return (
     <div className="demo-app">
@@ -63,11 +75,7 @@ export function Calendar({ items }: { items: IndexedItems }) {
           select={handleDateSelect}
           eventContent={renderEventContent}
           eventClick={handleEventClick}
-          /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
+          eventChange={onEventChange}
         />
       </div>
     </div>
