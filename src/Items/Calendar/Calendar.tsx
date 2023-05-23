@@ -1,10 +1,12 @@
-import type { DateSelectArg, EventApi, EventClickArg, EventContentArg } from "@fullcalendar/core";
+import type { DateSelectArg, EventClickArg, EventContentArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import React, { useRef, useState } from "react";
-import type { IndexedItems, Item } from "../types";
+import dayjs from "dayjs";
+import React from "react";
+import { useItemDrawer } from "../state/ItemDrawerContext";
+import type { IndexedItems } from "../types";
 
 let eventGuid = 0;
 
@@ -22,29 +24,16 @@ function renderEventContent(eventContent: EventContentArg) {
 }
 
 export function Calendar({ items }: { items: IndexedItems }) {
-  const initialEvents = useRef<Item[]>(
-    Object.values(items).map((item) => ({
-      ...item,
-      date: item.dueDate,
-    }))
-  );
-  const [_, setEvents] = useState<Item[]>(initialEvents.current);
+  const { setOpenDrawer } = useItemDrawer();
+
+  // todo memoise this
+  const initialEvents = Object.values(items).map((item) => ({
+    ...item,
+    date: item.dueDate ?? undefined,
+  }));
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
-    const title = prompt("Please enter a new title for your event");
-    const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
+    setOpenDrawer(true, { dueDate: dayjs(selectInfo.startStr).format("YYYY-MM-DD") });
   };
 
   const handleEventClick = (clickInfo: EventClickArg) => {
@@ -52,11 +41,6 @@ export function Calendar({ items }: { items: IndexedItems }) {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }
-  };
-
-  const handleEvents = (events: EventApi[]) => {
-    // @ts-ignore
-    setEvents(events);
   };
 
   return (
@@ -75,11 +59,10 @@ export function Calendar({ items }: { items: IndexedItems }) {
           selectMirror
           dayMaxEvents
           weekends
-          events={initialEvents.current} // alternatively, use the `events` setting to fetch from a feed
+          events={initialEvents}
           select={handleDateSelect}
-          eventContent={renderEventContent} // custom render function
+          eventContent={renderEventContent}
           eventClick={handleEventClick}
-          eventsSet={handleEvents} // called after events are initialized/added/changed/removed
           /* you can update a remote database when these fire:
             eventAdd={function(){}}
             eventChange={function(){}}
