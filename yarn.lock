@@ -560,6 +560,35 @@
   resolved "https://registry.yarnpkg.com/@fontsource/roboto/-/roboto-4.5.8.tgz#56347764786079838faf43f0eeda22dd7328437f"
   integrity sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==
 
+"@fullcalendar/core@^6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.7.tgz#83d8b109fbf0deb1d4c3262ca4b2d70e77a287c4"
+  integrity sha512-Hc63ARSyABlNo10B3NkA0z8ndaDmq5MKpcBB2iQsGQyn8N8cyn/x6V284Je1EwDoKsBlbrZAj+j+efBO+QQf5g==
+  dependencies:
+    preact "~10.12.1"
+
+"@fullcalendar/daygrid@^6.1.7", "@fullcalendar/daygrid@~6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.7.tgz#529d5f1989081c5ab9d129fcaf409111b31be976"
+  integrity sha512-IB+QdRcs+TeTlsK8qJFtYZ/2GugmXEFC0C00/n1aLT7GLgFn3ueV1GN0EKvXv9HJ5ai8My65mYbSyQizY/Ishw==
+
+"@fullcalendar/interaction@^6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.7.tgz#f2d86312371b284b46caae8c74b303e1fc7bdd4c"
+  integrity sha512-C2KHSinc9cFUTcGYxRSIj7cBYNSroce+1d2Wa+HKVHguVv4kQuEvm/oPxJpTLXqFjNLfxyxVac7Zd4U0znjFtg==
+
+"@fullcalendar/react@^6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.7.tgz#acdfaa84b0b12a9a70b26a6e8d494c14de0d3b44"
+  integrity sha512-Pwe88D4zXwP/XQsYWOa1foroF/OpHSLet5CiE4crnaKvngEtzt3SBDIO01agQOpo+yE1KM/n3yE5ePbdJtVJIQ==
+
+"@fullcalendar/timegrid@^6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.7.tgz#1c2dac33a7870928359f17a5e142d26f08022f79"
+  integrity sha512-kVgJVswu96LrCozr+GyYzF+LUZjURC4HyDg11tCfrj2wMTsrYKqUxilTGXuD3daD4T7qp3CLCg5GdD6lbYHI7A==
+  dependencies:
+    "@fullcalendar/daygrid" "~6.1.7"
+
 "@hello-pangea/dnd@^16.2.0":
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/@hello-pangea/dnd/-/dnd-16.2.0.tgz#58cbadeb56f8c7a381da696bb7aa3bfbb87876ec"
@@ -4378,6 +4407,11 @@ postcss@^8.4.23:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+preact@~10.12.1:
+  version "10.12.1"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.12.1.tgz#8f9cb5442f560e532729b7d23d42fd1161354a21"
+  integrity sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==
 
 prelude-ls@^1.2.1:
   version "1.2.1"
