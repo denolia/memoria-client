@@ -55,28 +55,24 @@ export function Calendar({ items }: { items: IndexedItems }) {
   }
 
   return (
-    <div className="demo-app">
-      <div className="demo-app-main">
-        <FullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth",
-          }}
-          initialView="dayGridMonth"
-          editable
-          selectable
-          selectMirror
-          dayMaxEvents
-          weekends
-          events={initialEvents}
-          select={handleDateSelect}
-          eventContent={renderEventContent}
-          eventClick={handleEventClick}
-          eventChange={onEventChange}
-        />
-      </div>
-    </div>
+    <FullCalendar
+      plugins={[dayGridPlugin, interactionPlugin]}
+      headerToolbar={{
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth",
+      }}
+      initialView="dayGridMonth"
+      editable
+      selectable
+      selectMirror
+      dayMaxEvents
+      weekends
+      events={initialEvents}
+      select={handleDateSelect}
+      eventContent={renderEventContent}
+      eventClick={handleEventClick}
+      eventChange={onEventChange}
+    />
   );
 }
