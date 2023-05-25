@@ -37,6 +37,13 @@ function TaskDueDateLabel({ dueDate }: { dueDate: Item["dueDate"] }) {
     </Typography>
   ) : null;
 }
+function EpicLabel({ epic }: { epic: Item["parent"] }) {
+  return epic ? (
+    <Typography variant="body2" sx={{ color: "grey.600", mb: 1 }}>
+      [{epic.title}]
+    </Typography>
+  ) : null;
+}
 
 export default function Task({ order, taskId }: Props) {
   const { items } = useItems();
@@ -59,7 +66,7 @@ export default function Task({ order, taskId }: Props) {
             </Box>
 
             <TaskDueDateLabel dueDate={task.dueDate} />
-
+            <EpicLabel epic={task.parent} />
             <Chip
               size="small"
               variant={task.priority === Priority.HIGH ? "filled" : "outlined"}
