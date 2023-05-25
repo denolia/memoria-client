@@ -1,12 +1,15 @@
 import { Logout } from "@mui/icons-material";
-import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { useNavigate } from "react-router";
 import { Link as LinkRouter } from "react-router-dom";
 import Logo from "./assets/lighthouse.svg";
 import { useAuth } from "./Auth/AuthContext";
@@ -58,32 +61,16 @@ function AccountArea() {
           </LinkRouter>
         </Button>
       )}
+
       <Menu
+        sx={{ mt: "45px" }}
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
+        onClose={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        {/* <MenuItem onClick={handleClose}> */}
-        {/*  <Avatar /> Profile */}
-        {/* </MenuItem> */}
-        {/* <MenuItem onClick={handleClose}> */}
-        {/*  <Avatar /> My account */}
-        {/* </MenuItem> */}
-        {/* <Divider /> */}
-        {/* <MenuItem onClick={handleClose}> */}
-        {/*  <ListItemIcon> */}
-        {/*    <PersonAdd fontSize="small" /> */}
-        {/*  </ListItemIcon> */}
-        {/*  Add another account */}
-        {/* </MenuItem> */}
-        {/* <MenuItem onClick={handleClose}> */}
-        {/*  <ListItemIcon> */}
-        {/*    <Settings fontSize="small" /> */}
-        {/*  </ListItemIcon> */}
-        {/*  Settings */}
-        {/* </MenuItem> */}
         <MenuItem onClick={onLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -95,48 +82,122 @@ function AccountArea() {
   );
 }
 
+function LogoGroup() {
+  return (
+    <>
+      <LinkRouter to="/">
+        <img src={Logo} width="40" height="40" alt="Logo" />
+      </LinkRouter>
+
+      <Typography
+        component="a"
+        variant="h6"
+        noWrap
+        sx={{
+          ml: 2,
+          mr: 2,
+          color: "inherit",
+          textDecoration: "none",
+          fontWeight: 600,
+          fontFamily: "monospace",
+          letterSpacing: ".3rem",
+        }}
+      >
+        BUBNOTION
+      </Typography>
+    </>
+  );
+}
+
+function HamburgerMenu({ sections }: HeaderProps) {
+  const navigate = useNavigate();
+
+  const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
+
+  const onOptionClick = (url: string) => {
+    navigate(url);
+    handleClose();
+  };
+
+  return (
+    <>
+      <IconButton
+        size="large"
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleClick}
+        color="inherit"
+      >
+        <MenuIcon />
+      </IconButton>
+
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={open}
+        onClose={handleClose}
+        sx={{
+          display: { xs: "block", md: "none" },
+        }}
+      >
+        {sections.map((page) => (
+          <MenuItem key={page.title} onClick={() => onOptionClick(page.url)}>
+            <Typography textAlign="center">{page.title}</Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+}
+
 export function Header({ sections }: HeaderProps) {
   const theme = useTheme();
 
   return (
-    <>
-      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <LinkRouter to="/">
-          <img src={Logo} width="40" height="40" alt="Logo" />
-        </LinkRouter>
+    <AppBar position="static" color="default" sx={{ paddingX: { xs: 1, md: 3 } }}>
+      <Toolbar disableGutters sx={{ color: theme.palette.text.secondary }}>
+        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
+          <LogoGroup />
+        </Box>
 
-        <Typography
-          component="h2"
-          variant="h5"
-          align="left"
-          noWrap
-          sx={{ flex: 1, ml: 2, color: "grey.800" }}
-        >
-          memoria
-        </Typography>
-        <IconButton>
-          <SearchIcon />
-        </IconButton>
-        <AccountArea />
+        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <HamburgerMenu sections={sections} />
+        </Box>
+        <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1, alignItems: "center" }}>
+          <LogoGroup />
+        </Box>
+
+        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {sections.map((page) => (
+            <LinkRouter
+              key={page.title}
+              to={page.url}
+              style={{
+                color: theme.palette.text.secondary,
+                textDecoration: "none",
+              }}
+            >
+              <Button key={page.title} sx={{ my: 2, color: "inherit", display: "block" }}>
+                {page.title}
+              </Button>
+            </LinkRouter>
+          ))}
+        </Box>
+
+        <Box sx={{ flexGrow: 0 }}>
+          <AccountArea />
+        </Box>
       </Toolbar>
-      <Toolbar
-        component="nav"
-        variant="dense"
-        sx={{ justifyContent: "flex-start", overflowX: "auto" }}
-      >
-        {sections.map(({ title: sectionTitle, url }) => (
-          <LinkRouter
-            key={sectionTitle}
-            to={url}
-            style={{
-              color: theme.palette.primary.dark,
-              marginRight: theme.spacing(2),
-            }}
-          >
-            {sectionTitle}
-          </LinkRouter>
-        ))}
-      </Toolbar>
-    </>
+    </AppBar>
   );
 }

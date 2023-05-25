@@ -42,13 +42,21 @@ function getBoardState(indexedItems: IndexedItems, filter?: (item: Item) => bool
   };
 }
 
-export function Board({ filter }: { filter?: (item: Item) => boolean }) {
+export function Board({
+  filter,
+  epic,
+}: {
+  filter?: (item: Item) => boolean;
+  epic?: string | null;
+}) {
   const { items, updateItem } = useItems();
-  const [state, setState] = useState(() => getBoardState(items));
+  const commonFilter = (item: Item) =>
+    (filter ? filter?.(item) : true) && (epic ? item.parent?.id === epic : true);
+  const [state, setState] = useState(() => getBoardState(items, commonFilter));
 
   useEffect(() => {
-    setState(getBoardState(items, filter));
-  }, [items]);
+    setState(getBoardState(items, commonFilter));
+  }, [items, epic]);
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, type } = result;
@@ -118,7 +126,7 @@ export function Board({ filter }: { filter?: (item: Item) => boolean }) {
   };
 
   return (
-    <Box sx={{ m: 3 }}>
+    <Box sx={{ marginX: { xs: 0, md: 3 }, marginY: { xs: 1, md: 2 } }}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
           {(provided) => (
