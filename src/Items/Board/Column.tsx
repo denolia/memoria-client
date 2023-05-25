@@ -16,10 +16,10 @@ interface Props {
 }
 
 export function Column({ column, index, tasks }: Props) {
-  const { setOpenDrawer } = useItemDrawer();
+  const { setOpenDrawer, defaultItem } = useItemDrawer();
 
   const onAddItem = (col: ColumnDef) => {
-    setOpenDrawer(true, { status: col.id });
+    setOpenDrawer(true, { ...defaultItem, status: col.id });
   };
 
   return (

@@ -1,6 +1,6 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import { Stack } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { groupBy } from "../../helpers/notLodash";
 import { moveItem, reorder } from "../../helpers/reorder";
@@ -9,8 +9,11 @@ import { Status } from "../types";
 import type { ColumnDef, Item, IndexedItems } from "../types";
 import { Column } from "./Column";
 
-function getBoardState(indexedItems: IndexedItems) {
-  const groupedTasks = groupBy(Object.values(indexedItems), (item) => item.status);
+function getBoardState(indexedItems: IndexedItems, filter?: (item: Item) => boolean) {
+  const itemsArray = Object.values(indexedItems);
+  const filteredItems = filter ? itemsArray.filter(filter) : itemsArray;
+
+  const groupedTasks = groupBy(filteredItems, (item) => item.status);
 
   return {
     columns: {
@@ -39,12 +42,12 @@ function getBoardState(indexedItems: IndexedItems) {
   };
 }
 
-export function Board() {
+export function Board({ filter }: { filter?: (item: Item) => boolean }) {
   const { items, updateItem } = useItems();
   const [state, setState] = useState(() => getBoardState(items));
 
   useEffect(() => {
-    setState(getBoardState(items));
+    setState(getBoardState(items, filter));
   }, [items]);
 
   const onDragEnd = (result: DropResult) => {
@@ -115,27 +118,29 @@ export function Board() {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="all-columns" direction="horizontal" type="column">
-        {(provided) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            // isDraggingOver={snapshot.isDraggingOver}
-          >
-            <Stack direction="row">
-              {state.columnOrder.map((columnId, index) => {
-                const column = state.columns[columnId];
+    <Box sx={{ m: 3 }}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="all-columns" direction="horizontal" type="column">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              // isDraggingOver={snapshot.isDraggingOver}
+            >
+              <Stack direction="row">
+                {state.columnOrder.map((columnId, index) => {
+                  const column = state.columns[columnId];
 
-                return (
-                  <Column key={columnId} column={column} tasks={column.taskIds} index={index} />
-                );
-              })}
-              {provided.placeholder}
-            </Stack>
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+                  return (
+                    <Column key={columnId} column={column} tasks={column.taskIds} index={index} />
+                  );
+                })}
+                {provided.placeholder}
+              </Stack>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </Box>
   );
 }
