@@ -30,8 +30,8 @@ export function TaskBoardView() {
           value={epic}
           onChange={(_, newValue) => setEpic(newValue)}
           options={epicsOptions}
-          sx={{ mx: { xs: 0, md: 3 }, width: "150px" }}
-          renderInput={(params) => <TextField {...params} label="Epic" />}
+          sx={{ mx: { xs: 3, md: 6 }, mt: 2, width: "300px" }}
+          renderInput={(params) => <TextField {...params} label="Epic" variant="standard" />}
         />
 
         <Board filter={(item) => item.type === ItemType.TASK} epic={epic?.value} />
