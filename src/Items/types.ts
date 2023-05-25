@@ -1,4 +1,4 @@
-enum ItemType {
+export enum ItemType {
   TASK = "Task",
   EPIC = "Epic",
 }

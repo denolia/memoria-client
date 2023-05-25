@@ -12,7 +12,7 @@ import React, { useRef } from "react";
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
 import type { Item } from "../types";
-import { Priority, Status } from "../types";
+import { ItemType, Priority, Status } from "../types";
 
 interface Props {
   actionText: string;
@@ -24,11 +24,13 @@ export function ItemForm({ actionText }: Props) {
 
   const { updateItem } = useItems();
   const datePickerRef = useRef<HTMLInputElement | null>(null);
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
     const title = data.get("title") as string | undefined;
+    const type = data.get("type") as ItemType | undefined;
     const description = data.get("description") as string | undefined;
     const priority = data.get("priority") as string | undefined;
     const status = data.get("status") as Status | undefined;
@@ -40,7 +42,7 @@ export function ItemForm({ actionText }: Props) {
       : undefined;
 
     const newItem = {
-      type: editItem?.type ?? "Task",
+      type: type ?? ItemType.TASK,
       title,
       description,
       priority: priority ?? Priority.LOW,
@@ -74,7 +76,22 @@ export function ItemForm({ actionText }: Props) {
           defaultValue={editItem?.title}
           autoFocus
         />
+
         <FormControl fullWidth>
+          <InputLabel id="type">type</InputLabel>
+          <Select
+            labelId="type"
+            name="type"
+            label="type"
+            id="type"
+            defaultValue={editItem?.type ?? ItemType.TASK}
+          >
+            <MenuItem value={ItemType.TASK}>task</MenuItem>
+            <MenuItem value={ItemType.EPIC}>epic</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth sx={{ mt: 1 }}>
           <InputLabel id="priority">priority</InputLabel>
           <Select
             labelId="priority"
