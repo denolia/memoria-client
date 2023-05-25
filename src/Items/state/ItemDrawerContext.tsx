@@ -3,15 +3,22 @@ import type { Item } from "../types";
 
 interface ItemDrawerContext {
   editItem: Partial<Item>;
+  defaultItem: Partial<Item>;
   openDrawer: boolean;
   setOpenDrawer: (open: boolean, item?: Partial<Item>) => void;
 }
 
 const Context = React.createContext<ItemDrawerContext | undefined>(undefined);
 
-export function ItemDrawerProvider({ children }: { children: React.ReactNode }) {
+export function ItemDrawerProvider({
+  defaultItem,
+  children,
+}: React.PropsWithChildren<{
+  defaultItem: Partial<Item>;
+}>) {
   const [state, setState] = useState<ItemDrawerContext>({
     editItem: {},
+    defaultItem,
     openDrawer: false,
     setOpenDrawer: () => {},
   });

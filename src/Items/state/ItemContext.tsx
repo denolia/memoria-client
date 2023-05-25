@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Auth/AuthContext";
 import { keyBy } from "../../helpers/notLodash";
-import type { Item } from "../types";
+import { ItemType } from "../types";
+import type { IndexedItems, Item } from "../types";
 import { requestDeleteItem } from "./requestDeleteItem";
 import { requestGetAllItems } from "./requestGetAllItems";
 import { requestUpdateItem } from "./requestUpdateBook";
 
 interface ItemsContext {
-  items: { [key: string]: Item }; // store indexed items for easier access
+  items: IndexedItems;
+  epics: IndexedItems;
   loading: boolean;
   getAllItems: () => void;
   updateItem: (_: Item) => Promise<boolean>;
@@ -19,6 +21,7 @@ const Context = React.createContext<ItemsContext | undefined>(undefined);
 export function ItemsProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<ItemsContext>({
     items: {},
+    epics: {},
     loading: true,
     getAllItems: () => {},
     updateItem: async () => new Promise(() => {}),
@@ -29,10 +32,15 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
   const getAllItems = async () => {
     const fetchedItems = await requestGetAllItems(user?.jwt);
     const indexedItems = keyBy(fetchedItems, "id");
+    const indexedEpics = keyBy(
+      fetchedItems.filter((item) => item.type === ItemType.EPIC),
+      "id"
+    );
 
     if (indexedItems) {
-      setState(({ items: _, ...rest }) => ({
+      setState(({ items: _, epics: __, ...rest }) => ({
         items: indexedItems,
+        epics: indexedEpics,
         ...rest,
         loading: false,
       }));

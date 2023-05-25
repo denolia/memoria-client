@@ -3,8 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import { SignInContainer } from "./Auth/Login/containers/SignInContainer";
 import { SignUpContainer } from "./Auth/Login/containers/SignUpContainer";
 import { Header } from "./Header";
-import { BoardView } from "./Items/Board/BoardView";
 import { CalendarView } from "./Items/Calendar/CalendarView";
+import { EpicBoardView } from "./views/EpicBoardView";
+import { TaskBoardView } from "./views/TaskBoardView";
 
 const sections = [
   { title: "board", url: "/" },
@@ -18,8 +19,9 @@ export function AppRoutes() {
     <div className="container">
       <Header sections={sections} />
       <Routes>
-        <Route path="/" element={<BoardView />} />
+        <Route path="/" element={<TaskBoardView />} />
         <Route path="/calendar" element={<CalendarView />} />
+        <Route path="/epics" element={<EpicBoardView />} />
 
         <Route path="/login" element={<SignInContainer />} />
         <Route path="/register" element={<SignUpContainer />} />

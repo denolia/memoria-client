@@ -4,7 +4,13 @@ import { LoginRequired } from "../../Auth/Login/helpers/LoginRequired";
 import { ItemDrawer } from "../Drawer/ItemDrawer";
 import { useItems } from "../state/ItemContext";
 import { ItemDrawerProvider } from "../state/ItemDrawerContext";
+import { ItemType, Status } from "../types";
 import { Calendar } from "./Calendar";
+
+const defaultItem = {
+  type: ItemType.TASK,
+  status: Status.BACKLOG,
+};
 
 export function CalendarView() {
   const { items, loading } = useItems();
@@ -13,7 +19,7 @@ export function CalendarView() {
     <div>loading...</div>
   ) : (
     <LoginRequired>
-      <ItemDrawerProvider>
+      <ItemDrawerProvider defaultItem={defaultItem}>
         <Box sx={{ m: 3 }}>
           <Calendar items={items} />
         </Box>
