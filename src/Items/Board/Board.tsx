@@ -118,7 +118,7 @@ export function Board({ filter }: { filter?: (item: Item) => boolean }) {
   };
 
   return (
-    <Box sx={{ m: 3 }}>
+    <Box sx={{ marginX: { xs: 0, md: 3 }, marginY: { xs: 1, md: 2 } }}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
           {(provided) => (
