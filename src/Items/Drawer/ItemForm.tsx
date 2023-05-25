@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Autocomplete, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
@@ -22,7 +22,13 @@ export function ItemForm({ actionText }: Props) {
   const { setOpenDrawer, editItem } = useItemDrawer();
   const theme = useTheme();
 
-  const { updateItem } = useItems();
+  const { updateItem, epics } = useItems();
+
+  const epicsOptions = useMemo(
+    () => Object.values(epics).map((epic) => ({ label: epic.title, value: epic.id })),
+    [epics]
+  );
+
   const datePickerRef = useRef<HTMLInputElement | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -90,6 +96,14 @@ export function ItemForm({ actionText }: Props) {
             <MenuItem value={ItemType.EPIC}>epic</MenuItem>
           </Select>
         </FormControl>
+
+        <Autocomplete
+          disablePortal
+          id="parent"
+          options={epicsOptions}
+          sx={{ mt: 1 }}
+          renderInput={(params) => <TextField {...params} label="Epic" />}
+        />
 
         <FormControl fullWidth sx={{ mt: 1 }}>
           <InputLabel id="priority">priority</InputLabel>
