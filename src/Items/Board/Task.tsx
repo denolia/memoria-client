@@ -32,14 +32,14 @@ function getPriorityColor(priority: string | undefined) {
 
 function TaskDueDateLabel({ dueDate }: { dueDate: Item["dueDate"] }) {
   return dueDate ? (
-    <Typography variant="body2" sx={{ color: "grey.600", mb: 1 }}>
+    <Typography variant="body2" sx={{ color: "grey.600" }}>
       {dayjs(dueDate).format("MMM D")}
     </Typography>
   ) : null;
 }
 function EpicLabel({ epic }: { epic: Item["parent"] }) {
   return epic ? (
-    <Typography variant="body2" sx={{ color: "grey.600", mb: 1 }}>
+    <Typography variant="body2" sx={{ color: "grey.600", mb: 0.5 }}>
       [{epic.title}]
     </Typography>
   ) : null;
@@ -56,23 +56,25 @@ export default function Task({ order, taskId }: Props) {
         <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
           <Paper
             sx={{
-              padding: 1,
+              padding: 0.7,
               backgroundColor: snapshot.isDragging ? darkTheme.palette.primary.light : "white",
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ flexGrow: 1 }}>{task.title}</Typography>
+              <Typography sx={{ flexGrow: 1, overflowWrap: "anywhere" }}>{task.title}</Typography>
               <ActionMenu task={task} />
             </Box>
 
-            <TaskDueDateLabel dueDate={task.dueDate} />
             <EpicLabel epic={task.parent} />
-            <Chip
-              size="small"
-              variant={task.priority === Priority.HIGH ? "filled" : "outlined"}
-              label={task.priority}
-              color={getPriorityColor(task.priority)}
-            />
+            <Box sx={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+              <Chip
+                size="small"
+                variant={task.priority === Priority.HIGH ? "filled" : "outlined"}
+                label={task.priority}
+                color={getPriorityColor(task.priority)}
+              />
+              <TaskDueDateLabel dueDate={task.dueDate} />
+            </Box>
           </Paper>
         </div>
       )}
