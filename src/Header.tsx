@@ -1,6 +1,5 @@
 import { Logout } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -61,12 +60,15 @@ function AccountArea() {
           </LinkRouter>
         </Button>
       )}
+
       <Menu
+        sx={{ mt: "45px" }}
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
+        onClose={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
         {/* <MenuItem onClick={handleClose}> */}
         {/*  <Avatar /> Profile */}
@@ -103,25 +105,7 @@ export function Header2({ sections }: HeaderProps) {
 
   return (
     <>
-      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <LinkRouter to="/">
-          <img src={Logo} width="40" height="40" alt="Logo" />
-        </LinkRouter>
-
-        <Typography
-          component="h2"
-          variant="h5"
-          align="left"
-          noWrap
-          sx={{ flex: 1, ml: 2, color: "grey.800" }}
-        >
-          memoria
-        </Typography>
-        <IconButton>
-          <SearchIcon />
-        </IconButton>
-        <AccountArea />
-      </Toolbar>
+      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }} />
       <Toolbar
         component="nav"
         variant="dense"
@@ -144,8 +128,6 @@ export function Header2({ sections }: HeaderProps) {
   );
 }
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 function LogoGroup() {
   return (
     <>
@@ -160,7 +142,6 @@ function LogoGroup() {
         sx={{
           ml: 2,
           mr: 2,
-
           color: "inherit",
           textDecoration: "none",
           fontWeight: 600,
@@ -176,24 +157,7 @@ function LogoGroup() {
 
 export function Header({ sections }: HeaderProps) {
   const theme = useTheme();
-
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
 
   return (
     <AppBar position="static" color="default" sx={{ paddingX: { xs: 1, md: 3 } }}>
@@ -208,14 +172,14 @@ export function Header({ sections }: HeaderProps) {
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleOpenNavMenu}
+            onClick={handleClick}
             color="inherit"
           >
             <MenuIcon />
           </IconButton>
           <Menu
             id="menu-appbar"
-            anchorEl={anchorElNav}
+            anchorEl={anchorEl}
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "left",
@@ -225,14 +189,14 @@ export function Header({ sections }: HeaderProps) {
               vertical: "top",
               horizontal: "left",
             }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
+            open={open}
+            onClose={handleClose}
             sx={{
               display: { xs: "block", md: "none" },
             }}
           >
             {sections.map((page) => (
-              <MenuItem key={page.title} onClick={handleCloseNavMenu}>
+              <MenuItem key={page.title} onClick={handleClose}>
                 <Typography textAlign="center">{page.title}</Typography>
               </MenuItem>
             ))}
@@ -254,7 +218,7 @@ export function Header({ sections }: HeaderProps) {
             >
               <Button
                 key={page.title}
-                onClick={handleCloseNavMenu}
+                onClick={handleClose}
                 sx={{ my: 2, color: "inherit", display: "block" }}
               >
                 {page.title}
@@ -264,33 +228,7 @@ export function Header({ sections }: HeaderProps) {
         </Box>
 
         <Box sx={{ flexGrow: 0 }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
+          <AccountArea />
         </Box>
       </Toolbar>
     </AppBar>
