@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import type { FormEvent } from "react";
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
@@ -21,11 +21,16 @@ interface Props {
 export function ItemForm({ actionText }: Props) {
   const { setOpenDrawer, editItem } = useItemDrawer();
   const theme = useTheme();
-
   const { updateItem, epics } = useItems();
 
+  const [epic, setEpic] = useState(
+    editItem.parent?.id
+      ? { label: epics[editItem.parent.id].title, value: editItem.parent.id }
+      : null
+  );
+
   const epicsOptions = useMemo(
-    () => Object.values(epics).map((epic) => ({ label: epic.title, value: epic.id })),
+    () => Object.values(epics).map((ep) => ({ label: ep.title, value: ep.id })),
     [epics]
   );
 
@@ -33,14 +38,13 @@ export function ItemForm({ actionText }: Props) {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
 
+    const data = new FormData(e.currentTarget);
     const title = data.get("title") as string | undefined;
     const type = data.get("type") as ItemType | undefined;
     const description = data.get("description") as string | undefined;
     const priority = data.get("priority") as string | undefined;
     const status = data.get("status") as Status | undefined;
-
     const selectedDate = datePickerRef.current?.value;
 
     const mongoFriendlyDueDate = selectedDate
@@ -49,6 +53,7 @@ export function ItemForm({ actionText }: Props) {
 
     const newItem = {
       type: type ?? ItemType.TASK,
+      parent: epic?.value ? { id: epic.value } : null,
       title,
       description,
       priority: priority ?? Priority.LOW,
@@ -98,8 +103,9 @@ export function ItemForm({ actionText }: Props) {
         </FormControl>
 
         <Autocomplete
-          disablePortal
           id="parent"
+          value={epic}
+          onChange={(_, newValue) => setEpic(newValue)}
           options={epicsOptions}
           sx={{ mt: 1 }}
           renderInput={(params) => <TextField {...params} label="Epic" />}

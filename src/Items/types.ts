@@ -30,7 +30,7 @@ export interface Item {
     name: string;
     id: string;
   };
-  parent?: string | null;
+  parent?: { id: string; title?: string } | null;
   description?: string | null;
   statusOrder: number;
   updated: string;
