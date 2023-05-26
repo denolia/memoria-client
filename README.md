@@ -1,3 +1,6 @@
-# memoria-client
+# bubnotion-client
 
-Frontend for memoria task tracker
+Frontend for Bubnotion task tracker
+
+Stack: React, Typescript, Vite, swc
+
