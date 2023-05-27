@@ -34,7 +34,7 @@ export function TaskBoardView() {
           renderInput={(params) => <TextField {...params} label="Epic" variant="standard" />}
         />
 
-        <Board filter={(item) => item.type === ItemType.TASK} epic={epic?.value} />
+        <Board filterCriteria={{ type: { is: ItemType.TASK } }} epic={epic?.value} />
 
         <ItemDrawer />
       </ItemDrawerProvider>
