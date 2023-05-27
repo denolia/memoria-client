@@ -62,8 +62,11 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     }
     const newItem = res.data;
 
-    setState(({ items, ...rest }) => ({
+    setState(({ items, epics, ...rest }) => ({
       items: { ...items, [newItem.id]: newItem },
+      ...(newItem.type === ItemType.EPIC
+        ? { epics: { ...epics, [newItem.id]: newItem } }
+        : { epics }),
       ...rest,
     }));
     return true;
