@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { groupBy } from "../../helpers/notLodash";
 import { useItems } from "../state/ItemContext";
-import type { ColumnDef, IndexedItems, Item } from "../types";
+import type { ColumnDef, IndexedItems, Item, ParentInfo } from "../types";
 import { Status } from "../types";
 import { DraggableBoard } from "./DraggableBoard";
 import type { BoardState } from "./types";
@@ -15,18 +15,19 @@ enum Operator {
 
 enum DateOperator {
   IS_BEFORE = "isBefore",
-  IS_AFTER = "isAfter",
+  // IS_AFTER = "isAfter",
 }
 
 type DateCriteria = Partial<Record<DateOperator, Dayjs | Date>>;
 
-type FieldCriteria = Partial<Record<Operator, string>>;
+type FieldCriteria<T> = Partial<Record<Operator, T>>;
+// todo rework this to put operator in the values
 
 type FilterCriteria = {
-  type?: FieldCriteria;
-  status?: FieldCriteria;
+  type?: FieldCriteria<Item["type"]>;
+  status?: FieldCriteria<Item["status"]>;
   dueDate?: DateCriteria;
-  epic?: FieldCriteria;
+  epic?: FieldCriteria<ParentInfo["id"]>;
 };
 
 const defaultFilterCriteria: FilterCriteria = {
@@ -49,15 +50,56 @@ function checkCriteria<T>(operator: Operator, criteria: T, value: T | undefined 
   return true;
 }
 
-function applyFilterToField(fieldCriteria: FieldCriteria, value: unknown) {
+function applyFilterToField<T>(fieldCriteria: FieldCriteria<T>, value: T) {
   return Object.entries(fieldCriteria).every(([operator, criteria]) =>
-    checkCriteria(operator as Operator, criteria, value)
+    checkCriteria<T>(operator as Operator, criteria, value)
   );
+}
+
+function checkStatus(status: FieldCriteria<Status> | undefined, item: Item) {
+  if (status) {
+    const now = dayjs(new Date());
+    const weekAgo = now.subtract(1, "week");
+    const statusSatisfied = applyFilterToField(status, item.status);
+    const isLatelyChanged = dayjs(item.created).isAfter(weekAgo);
+
+    return statusSatisfied || isLatelyChanged;
+  }
+  return true;
+}
+
+function checkDueDate(dueDate: DateCriteria | undefined, item: Item) {
+  if (dueDate) {
+    if (!item.dueDate) {
+      return true;
+    }
+
+    const now = dayjs(new Date());
+
+    const isBefore = dayjs(item.dueDate).isBefore(dayjs(dueDate.isBefore));
+    const isOverdue = dayjs(item.dueDate).isBefore(now);
+    const canBeOverdue = item.status !== Status.DONE;
+
+    return isBefore && (canBeOverdue || !isOverdue);
+  }
+  return true;
+}
+
+function checkEpic(epic: FieldCriteria<ParentInfo["id"]> | undefined, item: Item) {
+  if (epic) {
+    if (epic.is === "none") {
+      return !item.parent;
+    }
+
+    return item.parent?.id === epic.is;
+  }
+  return true;
 }
 
 function applyFilterCriteria(items: Item[], filterCriteria: FilterCriteria): Item[] {
   return items.filter((item) => {
-    const { dueDate, epic, ...restCriteria } = filterCriteria;
+    const { dueDate, epic, status, ...restCriteria } = filterCriteria;
+
     const res = Object.entries(restCriteria).every(([field, criteria]) =>
       applyFilterToField(criteria, item[field as keyof Item])
     );
@@ -66,29 +108,16 @@ function applyFilterCriteria(items: Item[], filterCriteria: FilterCriteria): Ite
       return false;
     }
 
-    let resDueDate = true;
-    if (dueDate) {
-      if (!item.dueDate) {
-        resDueDate = true;
-      } else {
-        const isBefore = dayjs(item.dueDate).isBefore(dayjs(dueDate.isBefore));
-        const isOverdue = dayjs(item.dueDate).isBefore(dayjs(new Date()));
-        const canBeOverdue = item.status !== Status.DONE;
-
-        resDueDate = isBefore && (canBeOverdue || !isOverdue);
-      }
-    }
-
-    if (!resDueDate) {
+    if (!checkStatus(status, item)) {
       return false;
     }
 
-    if (epic) {
-      if (epic.is === "none") {
-        return !item.parent;
-      }
+    if (!checkDueDate(dueDate, item)) {
+      return false;
+    }
 
-      return item.parent?.id === epic.is;
+    if (!checkEpic(epic, item)) {
+      return false;
     }
 
     return true;
@@ -142,6 +171,7 @@ export function Board({
     ...filterCriteria,
     ...(epic ? { epic: { [Operator.IS]: epic } } : {}),
   };
+
   const [state, setState] = useState(() => getBoardState(items, filter));
 
   useEffect(() => {

@@ -16,6 +16,11 @@ export enum Priority {
   HIGH = "High",
 }
 
+export interface ParentInfo {
+  id: string;
+  title?: string;
+}
+
 export interface Item {
   id: string;
   type: ItemType;
@@ -30,7 +35,7 @@ export interface Item {
     name: string;
     id: string;
   };
-  parent?: { id: string; title?: string } | null;
+  parent?: ParentInfo | null;
   description?: string | null;
   statusOrder: number;
   updated: string;
