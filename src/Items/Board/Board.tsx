@@ -9,7 +9,12 @@ import { Status } from "../types";
 import type { ColumnDef, Item, IndexedItems } from "../types";
 import { Column } from "./Column";
 
-function getBoardState(indexedItems: IndexedItems, filter?: (item: Item) => boolean) {
+interface BoardState {
+  columns: Record<Status, ColumnDef>;
+  columnOrder: Status[];
+}
+
+function getBoardState(indexedItems: IndexedItems, filter?: (item: Item) => boolean): BoardState {
   const itemsArray = Object.values(indexedItems);
   const filteredItems = filter ? itemsArray.filter(filter) : itemsArray;
 
@@ -37,26 +42,19 @@ function getBoardState(indexedItems: IndexedItems, filter?: (item: Item) => bool
         title: "done",
         taskIds: groupedTasks.Done?.map((item) => item.id) ?? [],
       },
-    } as { [key: string]: ColumnDef },
+    } as Record<Status, ColumnDef>,
     columnOrder: [Status.BACKLOG, Status.TODO, Status.IN_PROGRESS, Status.DONE],
   };
 }
 
-export function Board({
-  filter,
-  epic,
+function DraggableBoard({
+  state,
+  setState,
 }: {
-  filter?: (item: Item) => boolean;
-  epic?: string | null;
+  state: BoardState;
+  setState: React.Dispatch<React.SetStateAction<BoardState>>;
 }) {
   const { items, updateItem } = useItems();
-  const commonFilter = (item: Item) =>
-    (filter ? filter?.(item) : true) && (epic ? item.parent?.id === epic : true);
-  const [state, setState] = useState(() => getBoardState(items, commonFilter));
-
-  useEffect(() => {
-    setState(getBoardState(items, commonFilter));
-  }, [items, epic]);
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, type } = result;
@@ -76,8 +74,8 @@ export function Board({
       return;
     }
 
-    const start = state.columns[source.droppableId];
-    const finish = state.columns[destination.droppableId];
+    const start = state.columns[source.droppableId as Status];
+    const finish = state.columns[destination.droppableId as Status];
 
     if (start === finish) {
       const newTaskIds = reorder(start.taskIds, source.index, destination.index);
@@ -151,4 +149,23 @@ export function Board({
       </DragDropContext>
     </Box>
   );
+}
+
+export function Board({
+  filter,
+  epic,
+}: {
+  filter?: (item: Item) => boolean;
+  epic?: string | null;
+}) {
+  const { items } = useItems();
+  const commonFilter = (item: Item) =>
+    (filter ? filter?.(item) : true) && (epic ? item.parent?.id === epic : true);
+  const [state, setState] = useState(() => getBoardState(items, commonFilter));
+
+  useEffect(() => {
+    setState(getBoardState(items, commonFilter));
+  }, [items, epic]);
+
+  return <DraggableBoard state={state} setState={setState} />;
 }
