@@ -13,7 +13,7 @@ export function EpicBoardView() {
   return (
     <LoginRequired>
       <ItemDrawerProvider defaultItem={defaultItem}>
-        <Board filter={(item) => item.type === ItemType.EPIC} />
+        <Board filterCriteria={{ type: { is: ItemType.EPIC } }} />
 
         <ItemDrawer />
       </ItemDrawerProvider>

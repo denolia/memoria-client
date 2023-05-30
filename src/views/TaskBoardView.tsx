@@ -6,7 +6,7 @@ import { Board } from "../Items/Board/Board";
 import { ItemDrawer } from "../Items/Drawer/ItemDrawer";
 import { useItems } from "../Items/state/ItemContext";
 import { ItemDrawerProvider } from "../Items/state/ItemDrawerContext";
-import { ItemType } from "../Items/types";
+import { ItemType, Status } from "../Items/types";
 
 const defaultItem = {
   type: ItemType.TASK,
@@ -18,7 +18,10 @@ export function TaskBoardView() {
   const [epic, setEpic] = useState<{ label?: string; value: string } | null>(null);
 
   const epicsOptions = useMemo(
-    () => Object.values(epics).map((ep) => ({ label: ep.title, value: ep.id })),
+    () =>
+      Object.values(epics)
+        .filter((ep) => ep.status !== Status.DONE)
+        .map((ep) => ({ label: ep.title, value: ep.id })),
     [epics]
   );
 
@@ -34,7 +37,7 @@ export function TaskBoardView() {
           renderInput={(params) => <TextField {...params} label="Epic" variant="standard" />}
         />
 
-        <Board filter={(item) => item.type === ItemType.TASK} epic={epic?.value} />
+        <Board filterCriteria={{ type: { is: ItemType.TASK } }} epic={epic?.value} />
 
         <ItemDrawer />
       </ItemDrawerProvider>

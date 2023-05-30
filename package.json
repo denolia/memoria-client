@@ -1,6 +1,6 @@
 {
-  "name": "new-react-vite-project-template",
-  "version": "0.1.0",
+  "name": "bubnotion",
+  "version": "1.4.0",
   "private": true,
   "scripts": {
     "start": "vite",

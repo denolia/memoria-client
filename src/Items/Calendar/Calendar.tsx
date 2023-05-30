@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useItems } from "../state/ItemContext";
 import { useItemDrawer } from "../state/ItemDrawerContext";
+import { Status } from "../types";
 import type { IndexedItems, Item } from "../types";
 
 function renderEventContent(eventContent: EventContentArg) {
@@ -28,10 +29,12 @@ export function Calendar({ items }: { items: IndexedItems }) {
 
   const initialEvents = useMemo(
     () =>
-      Object.values(items).map((item) => ({
-        ...item,
-        date: item.dueDate ?? undefined,
-      })),
+      Object.values(items)
+        .filter((it) => it.status !== Status.DONE)
+        .map((item) => ({
+          ...item,
+          date: item.dueDate ?? undefined,
+        })),
     [items]
   );
 
