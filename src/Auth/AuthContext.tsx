@@ -1,5 +1,5 @@
 import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
@@ -13,7 +13,6 @@ interface AuthContext {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  spaces: Space[];
   currentSpace: Space | null;
 }
 
@@ -25,22 +24,32 @@ function getInitials(name: string | null | undefined) {
   return `${name[0]?.toUpperCase()}`;
 }
 
+const deserializeCurrentSpace = (): Space | null => {
+  const space = localStorage.getItem("memoria-current-space");
+
+  return space ? (JSON.parse(space) as Space) : null;
+};
+
+// const serializeSpace = (currentSpace: Space) => {
+//   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
+// };
+
+const deserializeUser = (): User | null => {
+  const serializedUser = localStorage.getItem("memoria-user");
+
+  return serializedUser ? (JSON.parse(serializedUser) as User) : null;
+};
+
+const serializeUser = (userToStore: User) => {
+  localStorage.setItem("memoria-user", JSON.stringify(userToStore));
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-
+  const [curSpace, setCurSpace] = useState<Space | null>(null);
   const navigate = useNavigate();
   const userInitials = getInitials(user?.username);
-
-  const deserializeUser = (): User | null => {
-    const serializedUser = localStorage.getItem("memoria-user");
-
-    return serializedUser ? (JSON.parse(serializedUser) as User) : null;
-  };
-
-  const serializeUser = (userToStore: User) => {
-    localStorage.setItem("memoria-user", JSON.stringify(userToStore));
-  };
 
   useEffect(() => {
     const savedUser = deserializeUser();
@@ -48,6 +57,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (savedUser) {
       setUser(savedUser);
     }
+
+    const savedCurrentSpace = deserializeCurrentSpace();
+    if (savedCurrentSpace) {
+      setCurSpace(savedCurrentSpace);
+    }
+
     setLoading(false);
   }, []);
 
@@ -58,8 +73,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await requestLogin(email, password);
-    if (loggedInUser) serializeUser(loggedInUser);
-    setUser(loggedInUser);
+    if (loggedInUser) {
+      serializeUser(loggedInUser);
+      setUser(loggedInUser);
+      setCurSpace(
+        loggedInUser?.userspaces?.find((space) => space.id === curSpace?.id) ??
+          user?.userspaces?.[0] ??
+          null
+      );
+    }
 
     navigate("/");
   };
@@ -67,12 +89,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = async (email: string, password: string) => {
     const signedUpUser = await requestSignup(email, password);
     setUser(signedUpUser);
+    setCurSpace(signedUpUser?.userspaces?.[0] ?? null);
     navigate("/");
   };
 
   const isLoggedIn = Boolean(user?.jwt);
-  const spaces = useMemo(() => (user as any)?.spaces ?? [], []);
-  const currentSpace = useMemo(() => (user as any)?.spaces[0] ?? null, []);
+
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value: AuthContext = {
     user,
@@ -81,8 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signup,
     logout,
     isLoggedIn,
-    spaces,
-    currentSpace,
+    currentSpace: curSpace,
   };
 
   return (
