@@ -14,6 +14,7 @@ interface AuthContext {
   signup: (email: string, password: string) => Promise<void>;
   logout: () => void;
   currentSpace: Space | null;
+  addSpace: (space: Space) => void;
 }
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
@@ -97,6 +98,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     navigate("/");
   };
 
+  const addSpace = (space: Space) => {
+    setUser((u) => {
+      if (!u) return null;
+
+      return { ...u, userspaces: [...(u.userspaces ?? []), space] };
+    });
+    setCurSpace(space);
+    serializeSpace(space);
+  };
+
   const isLoggedIn = Boolean(user?.jwt);
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
@@ -108,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     isLoggedIn,
     currentSpace: curSpace,
+    addSpace,
   };
 
   return (

@@ -5,7 +5,7 @@ import { ItemType } from "../types";
 import type { IndexedItems, Item } from "../types";
 import { requestDeleteItem } from "./requestDeleteItem";
 import { requestGetAllItems } from "./requestGetAllItems";
-import { requestUpdateItem } from "./requestUpdateBook";
+import { requestUpdateItem } from "./requestUpdateItem";
 
 interface ItemsContext {
   items: IndexedItems;

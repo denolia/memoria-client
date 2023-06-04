@@ -8,6 +8,8 @@ import {
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
+import { useAuth } from "../Auth/AuthContext";
+import { requestAddNewSpace } from "../Auth/state/requestAddNewSpace";
 
 interface Props {
   open: boolean;
@@ -15,15 +17,18 @@ interface Props {
 }
 
 export default function AddNewSpaceDialog({ open, setOpen }: Props) {
+  const { addSpace, user } = useAuth();
   const [name, setName] = useState<string | null>(null);
   const handleClose = () => {
     setOpen(false);
   };
 
-  const onAddSpaceRequest = () => {
-    console.log("new space requested: ", name);
-    // todo send new space request
+  const onAddSpaceRequest = async () => {
+    const addRes = await requestAddNewSpace(name ?? "", user?.jwt);
 
+    if (addRes?.data) {
+      addSpace(addRes.data);
+    }
     handleClose();
     setName(null);
   };
