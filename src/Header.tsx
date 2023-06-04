@@ -1,4 +1,5 @@
 import { Logout } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Divider, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -42,6 +43,12 @@ function AccountArea() {
     handleClose();
   };
 
+  const onNewSpaceRequest = () => {
+    console.log("new space requested");
+    // todo send new space request
+    handleClose();
+  };
+
   return (
     <>
       {isLoggedIn ? (
@@ -80,7 +87,7 @@ function AccountArea() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <Typography variant="body2" color="text.secondary" sx={{ ml: 1, mb: 1 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ ml: 1, mb: 0.5 }}>
           Spaces:
         </Typography>
 
@@ -93,6 +100,15 @@ function AccountArea() {
             {space.name}
           </MenuItem>
         ))}
+
+        <MenuItem key="add-new-space" onClick={() => onNewSpaceRequest()}>
+          <ListItemIcon>
+            <AddIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="body1" color="text.secondary" sx={{ ml: -1 }}>
+            Add new space
+          </Typography>
+        </MenuItem>
 
         <Divider />
 
