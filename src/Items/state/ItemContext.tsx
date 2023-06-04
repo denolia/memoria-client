@@ -51,7 +51,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     if (isLoggedIn) {
       getAllItems();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, currentSpace?.id]);
 
   const updateItem = async (updatedItem: Item) => {
     const res = await requestUpdateItem(updatedItem, currentSpace, user?.jwt);
