@@ -54,7 +54,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
   }, [isLoggedIn]);
 
   const updateItem = async (updatedItem: Item) => {
-    const res = await requestUpdateItem(updatedItem, user?.jwt);
+    const res = await requestUpdateItem(updatedItem, currentSpace, user?.jwt);
 
     if (!res) {
       // todo add toast notification
