@@ -30,9 +30,9 @@ const deserializeCurrentSpace = (): Space | null => {
   return space ? (JSON.parse(space) as Space) : null;
 };
 
-// const serializeSpace = (currentSpace: Space) => {
-//   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
-// };
+const serializeSpace = (currentSpace: Space) => {
+  localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
+};
 
 const deserializeUser = (): User | null => {
   const serializedUser = localStorage.getItem("memoria-user");
@@ -76,11 +76,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (loggedInUser) {
       serializeUser(loggedInUser);
       setUser(loggedInUser);
-      setCurSpace(
-        loggedInUser?.userspaces?.find((space) => space.id === curSpace?.id) ??
-          user?.userspaces?.[0] ??
-          null
-      );
+
+      const space =
+        loggedInUser?.userspaces?.find((sp) => sp.id === curSpace?.id) ??
+        loggedInUser?.userspaces?.[0] ??
+        null;
+      setCurSpace(space);
+      if (space) {
+        serializeSpace(space);
+      }
     }
 
     navigate("/");

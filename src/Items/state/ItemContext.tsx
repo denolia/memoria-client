@@ -27,10 +27,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     updateItem: async () => new Promise(() => {}),
     deleteItem: async () => new Promise(() => {}),
   });
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, currentSpace } = useAuth();
 
   const getAllItems = async () => {
-    const fetchedItems = await requestGetAllItems(user?.jwt);
+    const fetchedItems = await requestGetAllItems(currentSpace?.id, user?.jwt);
     const indexedItems = keyBy(fetchedItems, "id");
     const indexedEpics = keyBy(
       fetchedItems.filter((item) => item.type === ItemType.EPIC),
