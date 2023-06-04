@@ -15,6 +15,7 @@ interface AuthContext {
   logout: () => void;
   currentSpace: Space | null;
   addSpace: (space: Space) => void;
+  switchSpace: (space: Space) => void;
 }
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
@@ -48,7 +49,7 @@ const serializeUser = (userToStore: User) => {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [curSpace, setCurSpace] = useState<Space | null>(null);
+  const [currentSpace, setCurrentSpace] = useState<Space | null>(null);
   const navigate = useNavigate();
   const userInitials = getInitials(user?.username);
 
@@ -61,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const savedCurrentSpace = deserializeCurrentSpace();
     if (savedCurrentSpace) {
-      setCurSpace(savedCurrentSpace);
+      setCurrentSpace(savedCurrentSpace);
     }
 
     setLoading(false);
@@ -79,10 +80,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(loggedInUser);
 
       const space =
-        loggedInUser?.userspaces?.find((sp) => sp.id === curSpace?.id) ??
+        loggedInUser?.userspaces?.find((sp) => sp.id === currentSpace?.id) ??
         loggedInUser?.userspaces?.[0] ??
         null;
-      setCurSpace(space);
+      setCurrentSpace(space);
       if (space) {
         serializeSpace(space);
       }
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = async (email: string, password: string) => {
     const signedUpUser = await requestSignup(email, password);
     setUser(signedUpUser);
-    setCurSpace(signedUpUser?.userspaces?.[0] ?? null);
+    setCurrentSpace(signedUpUser?.userspaces?.[0] ?? null);
     navigate("/");
   };
 
@@ -104,8 +105,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return { ...u, userspaces: [...(u.userspaces ?? []), space] };
     });
-    setCurSpace(space);
+    setCurrentSpace(space);
     serializeSpace(space);
+  };
+
+  const switchSpace = (space: Space) => {
+    if (space) {
+      setCurrentSpace(space);
+      serializeSpace(space);
+    }
   };
 
   const isLoggedIn = Boolean(user?.jwt);
@@ -118,8 +126,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signup,
     logout,
     isLoggedIn,
-    currentSpace: curSpace,
+    currentSpace,
     addSpace,
+    switchSpace,
   };
 
   return (

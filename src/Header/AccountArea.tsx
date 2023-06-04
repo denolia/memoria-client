@@ -16,7 +16,7 @@ export function AccountArea() {
   const theme = useTheme();
   const [addSpaceModalOpen, setAddSpaceModalOpen] = useState(false);
 
-  const { user, currentSpace, isLoggedIn, userInitials, logout } = useAuth();
+  const { user, currentSpace, switchSpace, isLoggedIn, userInitials, logout } = useAuth();
   const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
 
   const onLogout = () => {
@@ -26,8 +26,7 @@ export function AccountArea() {
 
   const onSpaceClick = (space: Space) => {
     if (space.id !== currentSpace?.id) {
-      console.log("space changed", space);
-      // todo send space change request
+      switchSpace(space);
     }
     handleClose();
   };
