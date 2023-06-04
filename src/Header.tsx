@@ -1,6 +1,6 @@
 import { Logout } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Avatar, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Avatar, Divider, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import { Link as LinkRouter } from "react-router-dom";
 import Logo from "./assets/lighthouse.svg";
 import { useAuth } from "./Auth/AuthContext";
+import type { Space } from "./Auth/types";
 import { useMuiMenu } from "./helpers/hooks/useMuiMenu";
 
 interface HeaderProps {
@@ -25,11 +26,19 @@ interface HeaderProps {
 function AccountArea() {
   const theme = useTheme();
 
-  const { isLoggedIn, userInitials, logout } = useAuth();
+  const { user, currentSpace, isLoggedIn, userInitials, logout } = useAuth();
   const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
 
   const onLogout = () => {
     logout();
+    handleClose();
+  };
+
+  const onSpaceClick = (space: Space) => {
+    if (space.id !== currentSpace?.id) {
+      console.log("space changed", space);
+      // todo send space change request
+    }
     handleClose();
   };
 
@@ -71,6 +80,22 @@ function AccountArea() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
+        <Typography variant="body2" color="text.secondary" sx={{ ml: 1, mb: 1 }}>
+          Spaces:
+        </Typography>
+
+        {user?.userspaces?.map((space) => (
+          <MenuItem
+            key={space.id}
+            selected={space.id === currentSpace?.id}
+            onClick={() => onSpaceClick(space)}
+          >
+            {space.name}
+          </MenuItem>
+        ))}
+
+        <Divider />
+
         <MenuItem onClick={onLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
