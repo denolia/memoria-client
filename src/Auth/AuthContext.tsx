@@ -93,10 +93,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signup = async (email: string, password: string) => {
-    const signedUpUser = await requestSignup(email, password);
-    setUser(signedUpUser);
-    setCurrentSpace(signedUpUser?.userspaces?.[0] ?? null);
-    navigate("/");
+    const signupRes = await requestSignup(email, password);
+    if (signupRes === 200) {
+      navigate("/login");
+    }
   };
 
   const addSpace = (space: Space) => {
