@@ -5,7 +5,7 @@ import { ItemType } from "../types";
 import type { IndexedItems, Item } from "../types";
 import { requestDeleteItem } from "./requestDeleteItem";
 import { requestGetAllItems } from "./requestGetAllItems";
-import { requestUpdateItem } from "./requestUpdateBook";
+import { requestUpdateItem } from "./requestUpdateItem";
 
 interface ItemsContext {
   items: IndexedItems;
@@ -27,10 +27,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     updateItem: async () => new Promise(() => {}),
     deleteItem: async () => new Promise(() => {}),
   });
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, currentSpace } = useAuth();
 
   const getAllItems = async () => {
-    const fetchedItems = await requestGetAllItems(user?.jwt);
+    const fetchedItems = await requestGetAllItems(currentSpace?.id, user?.jwt);
     const indexedItems = keyBy(fetchedItems, "id");
     const indexedEpics = keyBy(
       fetchedItems.filter((item) => item.type === ItemType.EPIC),
@@ -51,10 +51,10 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
     if (isLoggedIn) {
       getAllItems();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, currentSpace?.id]);
 
   const updateItem = async (updatedItem: Item) => {
-    const res = await requestUpdateItem(updatedItem, user?.jwt);
+    const res = await requestUpdateItem(updatedItem, currentSpace, user?.jwt);
 
     if (!res) {
       // todo add toast notification

@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { SignInContainer } from "./Auth/Login/containers/SignInContainer";
 import { SignUpContainer } from "./Auth/Login/containers/SignUpContainer";
-import { Header } from "./Header";
+import { Header } from "./Header/Header";
 import { CalendarView } from "./Items/Calendar/CalendarView";
 import { EpicBoardView } from "./views/EpicBoardView";
 import { TaskBoardView } from "./views/TaskBoardView";
