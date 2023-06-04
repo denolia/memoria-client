@@ -11,7 +11,7 @@ interface AuthContext {
   userInitials: string;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, promo: string) => Promise<void>;
   logout: () => void;
   currentSpace: Space | null;
   addSpace: (space: Space) => void;
@@ -92,11 +92,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     navigate("/");
   };
 
-  const signup = async (email: string, password: string) => {
-    const signedUpUser = await requestSignup(email, password);
-    setUser(signedUpUser);
-    setCurrentSpace(signedUpUser?.userspaces?.[0] ?? null);
-    navigate("/");
+  const signup = async (email: string, password: string, promo: string) => {
+    const signupRes = await requestSignup(email, password, promo);
+    if (signupRes === 200) {
+      navigate("/login");
+    }
   };
 
   const addSpace = (space: Space) => {

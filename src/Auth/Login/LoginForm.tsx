@@ -1,9 +1,7 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
@@ -28,10 +26,18 @@ export function LoginForm({ mode }: Props) {
 
     const email = data.get("email") as string | undefined;
     const password = data.get("password") as string | undefined;
+    const promo = data.get("promo") as string | undefined;
 
-    const loginMethod = mode === LoginMode.SIGN_IN ? login : signup;
     if (email && password) {
-      loginMethod(email, password);
+      if (mode === LoginMode.SIGN_UP) {
+        if (!promo) {
+          alert("Please enter a promo code");
+          return;
+        }
+        signup(email, password, promo);
+      } else {
+        login(email, password);
+      }
     }
   }
 
@@ -69,10 +75,20 @@ export function LoginForm({ mode }: Props) {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            {mode === LoginMode.SIGN_UP && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="promo"
+                label="Promo Code"
+                name="promo"
+              />
+            )}
+            {/* <FormControlLabel */}
+            {/*  control={<Checkbox value="remember" color="primary" />} */}
+            {/*  label="Remember me" */}
+            {/* /> */}
             <Button
               type="submit"
               fullWidth
@@ -84,9 +100,9 @@ export function LoginForm({ mode }: Props) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/help" variant="body2">
-                  Forgot password?
-                </Link>
+                {/* <Link href="/help" variant="body2"> */}
+                {/*  Forgot password? */}
+                {/* </Link> */}
               </Grid>
               <Grid item>
                 <Link href={mode === LoginMode.SIGN_IN ? "/register" : "/login"} variant="body2">
