@@ -9,13 +9,14 @@ import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link as LinkRouter } from "react-router-dom";
 import Logo from "./assets/lighthouse.svg";
 import { useAuth } from "./Auth/AuthContext";
 import type { Space } from "./Auth/types";
 import { useMuiMenu } from "./helpers/hooks/useMuiMenu";
+import AddNewSpaceDialog from "./Spaces/AddNewSpaceDialog";
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -26,6 +27,7 @@ interface HeaderProps {
 
 function AccountArea() {
   const theme = useTheme();
+  const [addSpaceModalOpen, setAddSpaceModalOpen] = useState(false);
 
   const { user, currentSpace, isLoggedIn, userInitials, logout } = useAuth();
   const { open, handleClick, anchorEl, handleClose } = useMuiMenu();
@@ -43,9 +45,8 @@ function AccountArea() {
     handleClose();
   };
 
-  const onNewSpaceRequest = () => {
-    console.log("new space requested");
-    // todo send new space request
+  const onAddSpaceRequest = () => {
+    setAddSpaceModalOpen(true);
     handleClose();
   };
 
@@ -101,12 +102,12 @@ function AccountArea() {
           </MenuItem>
         ))}
 
-        <MenuItem key="add-new-space" onClick={() => onNewSpaceRequest()}>
+        <MenuItem key="add-new-space" onClick={() => onAddSpaceRequest()}>
           <ListItemIcon>
             <AddIcon fontSize="small" />
           </ListItemIcon>
           <Typography variant="body1" color="text.secondary" sx={{ ml: -1 }}>
-            Add new space
+            Add new space…
           </Typography>
         </MenuItem>
 
@@ -119,6 +120,7 @@ function AccountArea() {
           Logout
         </MenuItem>
       </Menu>
+      <AddNewSpaceDialog open={addSpaceModalOpen} setOpen={setAddSpaceModalOpen} />
     </>
   );
 }
