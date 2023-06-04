@@ -1,10 +1,10 @@
 import { Backdrop, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import type { User } from "./types";
+import type { Space, User } from "./types";
 
 interface AuthContext {
   user: User | null;
@@ -13,6 +13,8 @@ interface AuthContext {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  spaces: Space[];
+  currentSpace: Space | null;
 }
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
@@ -26,6 +28,7 @@ function getInitials(name: string | null | undefined) {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+
   const navigate = useNavigate();
   const userInitials = getInitials(user?.username);
 
@@ -57,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const loggedInUser = await requestLogin(email, password);
     if (loggedInUser) serializeUser(loggedInUser);
     setUser(loggedInUser);
+
     navigate("/");
   };
 
@@ -67,9 +71,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const isLoggedIn = Boolean(user?.jwt);
-
+  const spaces = useMemo(() => (user as any)?.spaces ?? [], []);
+  const currentSpace = useMemo(() => (user as any)?.spaces[0] ?? null, []);
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const value: AuthContext = { user, userInitials, login, signup, logout, isLoggedIn };
+  const value: AuthContext = {
+    user,
+    userInitials,
+    login,
+    signup,
+    logout,
+    isLoggedIn,
+    spaces,
+    currentSpace,
+  };
 
   return (
     <Context.Provider value={value}>
