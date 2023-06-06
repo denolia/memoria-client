@@ -30,7 +30,7 @@ function checkStatus(status: FieldCriteria<Status> | undefined, item: Item) {
     const now = dayjs(new Date());
     const weekAgo = now.subtract(1, "week");
     const statusSatisfied = applyFilterToField(status, item.status);
-    const isLatelyChanged = dayjs(item.created).isAfter(weekAgo);
+    const isLatelyChanged = dayjs(item.updated).isAfter(weekAgo);
 
     return statusSatisfied || isLatelyChanged;
   }
