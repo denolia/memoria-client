@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { useConfirm } from "material-ui-confirm";
 import type { FormEvent } from "react";
 import React from "react";
 import { Link as LinkRouter } from "react-router-dom";
@@ -19,10 +18,10 @@ interface Props {
 
 export function LoginForm({ mode }: Props) {
   const { login, signup } = useAuth();
+  const [promoError, setPromoError] = React.useState(false);
   const theme = useTheme();
-  const confirm = useConfirm();
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
@@ -33,7 +32,7 @@ export function LoginForm({ mode }: Props) {
     if (email && password) {
       if (mode === LoginMode.SIGN_UP) {
         if (!promo) {
-          await confirm({ title: "Please enter a promo code", hideCancelButton: true });
+          setPromoError(true);
 
           return;
         }
@@ -81,6 +80,8 @@ export function LoginForm({ mode }: Props) {
             {mode === LoginMode.SIGN_UP && (
               <TextField
                 margin="normal"
+                error={promoError}
+                helperText={promoError && "Please enter a promo code"}
                 required
                 fullWidth
                 id="promo"
@@ -117,6 +118,7 @@ export function LoginForm({ mode }: Props) {
             </Grid>
           </Box>
         </Box>
+
         <Copyright />
       </Container>
     </div>
