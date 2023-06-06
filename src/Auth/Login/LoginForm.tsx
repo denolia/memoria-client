@@ -3,11 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useConfirm } from "material-ui-confirm";
 import type { FormEvent } from "react";
 import React from "react";
+import { Link as LinkRouter } from "react-router-dom";
 import { Copyright } from "../../Common/Copyright";
 import { useAuth } from "../AuthContext";
 import { LoginMode } from "./types";
@@ -19,8 +20,9 @@ interface Props {
 export function LoginForm({ mode }: Props) {
   const { login, signup } = useAuth();
   const theme = useTheme();
+  const confirm = useConfirm();
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
@@ -31,7 +33,8 @@ export function LoginForm({ mode }: Props) {
     if (email && password) {
       if (mode === LoginMode.SIGN_UP) {
         if (!promo) {
-          alert("Please enter a promo code");
+          await confirm({ title: "Please enter a promo code", hideCancelButton: true });
+
           return;
         }
         signup(email, password, promo);
@@ -105,11 +108,11 @@ export function LoginForm({ mode }: Props) {
                 {/* </Link> */}
               </Grid>
               <Grid item>
-                <Link href={mode === LoginMode.SIGN_IN ? "/register" : "/login"} variant="body2">
+                <LinkRouter to={mode === LoginMode.SIGN_IN ? "/register" : "/login"}>
                   {mode === LoginMode.SIGN_IN
                     ? "Don't have an account? Sign Up"
                     : "Already have an account? Sign In"}
-                </Link>
+                </LinkRouter>
               </Grid>
             </Grid>
           </Box>
