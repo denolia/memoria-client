@@ -71,5 +71,6 @@ module.exports = {
     "@typescript-eslint/switch-exhaustiveness-check": "error",
     "require-await": "off",
     "@typescript-eslint/require-await": "error",
+    "react/jsx-no-constructed-context-values": "warn",
   },
 };
