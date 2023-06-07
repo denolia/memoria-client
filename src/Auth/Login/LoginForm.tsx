@@ -36,6 +36,8 @@ export function LoginForm({ mode }: Props) {
         if (!promo) {
           setPromoError(true);
           snackbar.showSnackbar("Please enter a promo code", "error");
+          snackbar.showSnackbar("2", "error");
+          snackbar.showSnackbar("3", "error");
           return;
         }
         signup(email, password, promo);

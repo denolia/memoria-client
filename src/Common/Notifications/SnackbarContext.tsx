@@ -10,15 +10,18 @@ const Context = React.createContext<SnackbarsContext | undefined>(undefined);
 
 type SnackbarType = AlertProps["severity"];
 
+interface SnackData {
+  open: boolean;
+  message: string;
+  type: SnackbarType;
+}
+
 export function SnackbarProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>();
-  const [type, setType] = useState<SnackbarType>();
+  const [snacks, setSnacks] = useState<SnackData[]>([]);
 
   const showSnackbar = useCallback((msg: string, typ: SnackbarType) => {
-    setOpen(true);
-    setMessage(msg);
-    setType(typ);
+    // todo: add a queue of snackbars
+    setSnacks(snacks.concat({ open: true, message: msg, type: typ }));
   }, []);
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
