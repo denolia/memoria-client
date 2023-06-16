@@ -1,6 +1,15 @@
 import { Logout } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
-import { Avatar, Divider, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Avatar,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
@@ -84,7 +93,19 @@ export function AccountArea() {
             selected={space.id === currentSpace?.id}
             onClick={() => onSpaceClick(space)}
           >
-            {space.name}
+            <ListItemText>{space.name}</ListItemText>
+
+            <LinkRouter
+              to={`/spaces/${space.id}`}
+              style={{
+                color: theme.palette.primary.dark,
+                textDecoration: "none",
+              }}
+            >
+              <IconButton size="small">
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </LinkRouter>
           </MenuItem>
         ))}
 
