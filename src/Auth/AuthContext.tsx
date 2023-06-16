@@ -4,7 +4,8 @@ import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import type { Space, User } from "./types";
+import type { SpaceShort, User } from "./types";
+import { getUsernameInitials } from "./utils";
 
 interface AuthContext {
   user: User | null;
@@ -13,26 +14,20 @@ interface AuthContext {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, promo: string) => Promise<void>;
   logout: () => void;
-  currentSpace: Space | null;
-  addSpace: (space: Space) => void;
-  switchSpace: (space: Space) => void;
+  currentSpace: SpaceShort | null;
+  addSpace: (space: SpaceShort) => void;
+  switchSpace: (space: SpaceShort) => void;
 }
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
 
-function getInitials(name: string | null | undefined) {
-  if (!name) return "";
-
-  return `${name[0]?.toUpperCase()}`;
-}
-
-const deserializeCurrentSpace = (): Space | null => {
+const deserializeCurrentSpace = (): SpaceShort | null => {
   const space = localStorage.getItem("memoria-current-space");
 
-  return space ? (JSON.parse(space) as Space) : null;
+  return space ? (JSON.parse(space) as SpaceShort) : null;
 };
 
-const serializeSpace = (currentSpace: Space) => {
+const serializeSpace = (currentSpace: SpaceShort) => {
   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
 };
 
@@ -49,9 +44,9 @@ const serializeUser = (userToStore: User) => {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [currentSpace, setCurrentSpace] = useState<Space | null>(null);
+  const [currentSpace, setCurrentSpace] = useState<SpaceShort | null>(null);
   const navigate = useNavigate();
-  const userInitials = getInitials(user?.username);
+  const userInitials = getUsernameInitials(user?.username);
 
   useEffect(() => {
     const savedUser = deserializeUser();
@@ -99,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addSpace = (space: Space) => {
+  const addSpace = (space: SpaceShort) => {
     setUser((u) => {
       if (!u) return null;
 
@@ -109,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     serializeSpace(space);
   };
 
-  const switchSpace = (space: Space) => {
+  const switchSpace = (space: SpaceShort) => {
     if (space) {
       setCurrentSpace(space);
       serializeSpace(space);

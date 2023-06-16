@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext";
-import type { Space } from "../Auth/types";
+import type { SpaceShort } from "../Auth/types";
 import { useMuiMenu } from "../helpers/hooks/useMuiMenu";
 import AddNewSpaceDialog from "../Spaces/AddNewSpaceDialog";
 
@@ -33,7 +33,7 @@ export function AccountArea() {
     handleClose();
   };
 
-  const onSpaceClick = (space: Space) => {
+  const onSpaceClick = (space: SpaceShort) => {
     if (space.id !== currentSpace?.id) {
       switchSpace(space);
     }

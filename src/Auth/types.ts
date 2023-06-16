@@ -1,10 +1,10 @@
 export interface User {
   username?: string;
-  userspaces?: Space[];
+  userspaces?: SpaceShort[];
   jwt?: string;
 }
 
-export interface Space {
+export interface SpaceShort {
   id: string;
   name: string;
 }

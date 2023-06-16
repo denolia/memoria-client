@@ -1,18 +1,16 @@
 import axios from "axios";
-import type { SpaceShort } from "../../Auth/types";
 import { API } from "../../environment";
-import type { Item } from "../types";
 
-export async function requestUpdateItem(
-  item: Item,
-  space: SpaceShort | null,
+export async function requestInviteUserToSpace(
+  spaceId: string,
+  userId: string,
   token: string | undefined
 ) {
   let res = null;
   try {
     res = await axios.post(
-      `${API}item`,
-      { ...item, space },
+      `${API}space/invite?spaceId=${spaceId}&inviteeId=${userId}`,
+      {},
       {
         headers: { Authentication: `Bearer ${token}` },
       }
