@@ -23,22 +23,23 @@ import { LoadingBackdrop } from "../Common/LoadingBackdrop";
 export function ManageSpace() {
   const { spaceId } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [space, setSpace] = useState<SpaceDef | null>(null);
+  const [space, setSpace] = useState<SpaceDef>();
   const { user } = useAuth();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
-  useEffect(() => {
-    async function getSpace() {
-      if (!spaceId) {
-        return;
-      }
-      const spaceDef = await fetchSpaceById(spaceId, user?.jwt);
-
-      if (spaceDef) {
-        setSpace(spaceDef);
-        setIsLoading(false)
-      }
+  async function getSpace() {
+    if (!spaceId) {
+      return;
     }
+    const spaceDef = await fetchSpaceById(spaceId, user?.jwt);
+
+    if (spaceDef) {
+      setSpace(spaceDef);
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     getSpace();
   }, [spaceId]);
 
@@ -84,9 +85,10 @@ export function ManageSpace() {
       </List>
 
       <InviteNewUserToSpaceDialog
-        spaceId={spaceId}
+        space={space}
         open={inviteModalOpen}
         setOpen={setInviteModalOpen}
+        onChange={getSpace}
       />
     </Container>
   );

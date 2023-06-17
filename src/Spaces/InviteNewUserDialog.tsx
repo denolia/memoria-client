@@ -13,14 +13,16 @@ import { useAuth } from "../Auth/AuthContext";
 import { requestInviteUserToSpace } from "./api/requestInviteUserToSpace";
 import { LoadingBackdrop } from "../Common/LoadingBackdrop";
 import { fetchAllUsers } from "./api/fetchAllUsers";
+import type { SpaceDef } from "./types";
 
 interface Props {
-  spaceId: string | undefined;
+  space: SpaceDef | undefined;
   open: boolean;
   setOpen: (open: boolean) => void;
+  onChange: () => void;
 }
 
-export default function InviteNewUserToSpaceDialog({ spaceId, open, setOpen }: Props) {
+export default function InviteNewUserToSpaceDialog({ space, open, setOpen, onChange }: Props) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [invitee, setInvitee] = useState<{ label: string; value: string } | null>(null);
@@ -34,23 +36,27 @@ export default function InviteNewUserToSpaceDialog({ spaceId, open, setOpen }: P
       const usersRes = await fetchAllUsers(user?.jwt);
 
       if (usersRes) {
-        setUsers(usersRes.map((u) => ({ label: u.name, value: u.id })));
+        const participantIds = space?.participants.map((p) => p.id) ?? [];
+        setUsers(
+          usersRes
+            .filter((u) => !participantIds.includes(u.id))
+            .map((u) => ({ label: u.name, value: u.id }))
+        );
         setIsLoading(false);
       }
     }
     getUsers();
-  }, [spaceId]);
+  }, [space?.participants]);
 
   const onInviteRequest = async () => {
-    // todo get invitee id
-    if (!spaceId || !invitee) {
+    if (!space?.id || !invitee?.value) {
       return;
     }
-    const addRes = await requestInviteUserToSpace(spaceId, invitee.value, user?.jwt);
+    const addRes = await requestInviteUserToSpace(space.id, invitee.value, user?.jwt);
 
     if (addRes?.data) {
-      // todo
-      console.log("Optimistically add user to the list");
+      // todo maybe check the err?
+      onChange();
     }
     handleClose();
     setInvitee(null);
