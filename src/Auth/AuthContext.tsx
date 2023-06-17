@@ -1,11 +1,11 @@
-import { Backdrop, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import type { SpaceShort, LoginResponse } from "./types";
+import type { LoginResponse, Space } from "./types";
 import { getUsernameInitials } from "./utils";
+import { LoadingBackdrop } from "../Common/LoadingBackdrop";
 
 interface AuthContext {
   user: LoginResponse | null;
@@ -14,20 +14,20 @@ interface AuthContext {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, promo: string) => Promise<void>;
   logout: () => void;
-  currentSpace: SpaceShort | null;
-  addSpace: (space: SpaceShort) => void;
-  switchSpace: (space: SpaceShort) => void;
+  currentSpace: Space | null;
+  addSpace: (space: Space) => void;
+  switchSpace: (space: Space) => void;
 }
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
 
-const deserializeCurrentSpace = (): SpaceShort | null => {
+const deserializeCurrentSpace = (): Space | null => {
   const space = localStorage.getItem("memoria-current-space");
 
-  return space ? (JSON.parse(space) as SpaceShort) : null;
+  return space ? (JSON.parse(space) as Space) : null;
 };
 
-const serializeSpace = (currentSpace: SpaceShort) => {
+const serializeSpace = (currentSpace: Space) => {
   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
 };
 
@@ -44,7 +44,7 @@ const serializeUser = (userToStore: LoginResponse) => {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<LoginResponse | null>(null);
-  const [currentSpace, setCurrentSpace] = useState<SpaceShort | null>(null);
+  const [currentSpace, setCurrentSpace] = useState<Space | null>(null);
   const navigate = useNavigate();
   const userInitials = getUsernameInitials(user?.username);
 
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addSpace = (space: SpaceShort) => {
+  const addSpace = (space: Space) => {
     setUser((u) => {
       if (!u) return null;
 
@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     serializeSpace(space);
   };
 
-  const switchSpace = (space: SpaceShort) => {
+  const switchSpace = (space: Space) => {
     if (space) {
       setCurrentSpace(space);
       serializeSpace(space);
@@ -128,13 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Context.Provider value={value}>
-      {loading ? (
-        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        children
-      )}
+      {loading ? <LoadingBackdrop  /> : children}
     </Context.Provider>
   );
 }

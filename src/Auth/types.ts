@@ -1,10 +1,10 @@
 export interface LoginResponse {
   username?: string;
-  userspaces?: SpaceShort[];
+  userspaces?: Space[];
   jwt?: string;
 }
 
-export interface SpaceShort {
+export interface Space {
   id: string;
   name: string;
 }

@@ -1,11 +1,11 @@
 import axios from "axios";
-import type { SpaceShort } from "../../Auth/types";
+import type { Space } from "../../Auth/types";
 import { API } from "../../environment";
 import type { Item } from "../types";
 
 export async function requestUpdateItem(
   item: Item,
-  space: SpaceShort | null,
+  space: Space | null,
   token: string | undefined
 ) {
   let res = null;
