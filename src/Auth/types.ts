@@ -1,4 +1,4 @@
-export interface User {
+export interface LoginResponse {
   username?: string;
   userspaces?: SpaceShort[];
   jwt?: string;

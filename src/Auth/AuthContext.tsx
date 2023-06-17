@@ -4,11 +4,11 @@ import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import type { SpaceShort, User } from "./types";
+import type { SpaceShort, LoginResponse } from "./types";
 import { getUsernameInitials } from "./utils";
 
 interface AuthContext {
-  user: User | null;
+  user: LoginResponse | null;
   userInitials: string;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -31,19 +31,19 @@ const serializeSpace = (currentSpace: SpaceShort) => {
   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
 };
 
-const deserializeUser = (): User | null => {
+const deserializeUser = (): LoginResponse | null => {
   const serializedUser = localStorage.getItem("memoria-user");
 
-  return serializedUser ? (JSON.parse(serializedUser) as User) : null;
+  return serializedUser ? (JSON.parse(serializedUser) as LoginResponse) : null;
 };
 
-const serializeUser = (userToStore: User) => {
+const serializeUser = (userToStore: LoginResponse) => {
   localStorage.setItem("memoria-user", JSON.stringify(userToStore));
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<LoginResponse | null>(null);
   const [currentSpace, setCurrentSpace] = useState<SpaceShort | null>(null);
   const navigate = useNavigate();
   const userInitials = getUsernameInitials(user?.username);

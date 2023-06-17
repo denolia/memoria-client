@@ -38,6 +38,7 @@ export function ManageSpace() {
     }
     getSpace();
   }, [spaceId]);
+  console.log(space);
 
   return (
     <Container sx={{ mt: 2 }}>
@@ -47,7 +48,7 @@ export function ManageSpace() {
 
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {space?.participants.map((participant) => (
-          <>
+          <React.Fragment key={participant.username}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar sx={{ width: 32, height: 32 }}>
@@ -56,12 +57,12 @@ export function ManageSpace() {
               </ListItemAvatar>
               <ListItemText
                 primary={participant.username}
-                secondary={space?.owner.username === participant.username ? "Owner" : "Participant"}
+                secondary={(space?.owner && space?.owner?.username === participant.username) ? "Owner" : "Participant"}
               />
             </ListItem>
 
             <Divider />
-          </>
+          </React.Fragment>
         ))}
 
         <ListItemButton onClick={() => setInviteModalOpen(true)}>

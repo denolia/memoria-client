@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API } from "../../environment";
-import type { User } from "../types";
+import type { LoginResponse } from "../types";
 
 export async function requestLogin(username: string, password: string) {
   try {
@@ -8,7 +8,7 @@ export async function requestLogin(username: string, password: string) {
       username,
       password,
     });
-    return response.data as User;
+    return response.data as LoginResponse;
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);

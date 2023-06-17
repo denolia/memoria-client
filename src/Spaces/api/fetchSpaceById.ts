@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API } from "../../environment";
-import { SpaceDef } from "../types";
+import type { SpaceDef } from "../types";
 
 export function fetchSpaceById(spaceId: string, token: string | undefined) {
   return axios
