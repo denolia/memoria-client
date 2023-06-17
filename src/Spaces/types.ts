@@ -4,6 +4,6 @@ export interface SpaceDef {
   id: string;
   name: string;
   description: string;
-  users: string[];
+  participants: User[];
   owner: User;
 }

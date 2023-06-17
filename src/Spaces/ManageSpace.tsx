@@ -17,26 +17,27 @@ import { useAuth } from "../Auth/AuthContext";
 import { getUsernameInitials } from "../Auth/utils";
 import { fetchSpaceById } from "./api/fetchSpaceById";
 import InviteNewUserToSpaceDialog from "./InviteNewUserDialog";
-import { SpaceDef } from "./types";
+import type { SpaceDef } from "./types";
 
 export function ManageSpace() {
   const { spaceId } = useParams();
-  const [_space, setSpace] = useState<SpaceDef>(null);
+  const [space, setSpace] = useState<SpaceDef | null>(null);
   const { user } = useAuth();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!spaceId) {
-      return;
-    }
-    const res = await fetchSpaceById(spaceId, user?.jwt);
+    async function getSpace() {
+      if (!spaceId) {
+        return;
+      }
+      const spaceDef = await fetchSpaceById(spaceId, user?.jwt);
 
-    if (res?.data) {
-      setSpace(res.data);
+      if (spaceDef) {
+        setSpace(spaceDef);
+      }
     }
+    getSpace();
   }, [spaceId]);
-
-  const participant = { username: "test" };
 
   return (
     <Container sx={{ mt: 2 }}>
@@ -45,16 +46,23 @@ export function ManageSpace() {
       </Typography>
 
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <ListItem alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar sx={{ width: 32, height: 32 }}>
-              {getUsernameInitials(participant?.username)}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={user.username} secondary="Participant/Owner" />
-        </ListItem>
+        {space?.participants.map((participant) => (
+          <>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar sx={{ width: 32, height: 32 }}>
+                  {getUsernameInitials(participant?.username)}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={participant.username}
+                secondary={space?.owner.username === participant.username ? "Owner" : "Participant"}
+              />
+            </ListItem>
 
-        <Divider />
+            <Divider />
+          </>
+        ))}
 
         <ListItemButton onClick={() => setInviteModalOpen(true)}>
           <ListItemIcon>
