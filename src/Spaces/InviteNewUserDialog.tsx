@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import { useAuth } from "../Auth/AuthContext";
 import { requestInviteUserToSpace } from "./api/requestInviteUserToSpace";
 import { LoadingBackdrop } from "../Common/LoadingBackdrop";
+import { fetchAllUsers } from "./api/fetchAllUsers";
 
 interface Props {
   spaceId: string | undefined;
@@ -27,13 +28,13 @@ export default function InviteNewUserToSpaceDialog({ spaceId, open, setOpen }: P
   const handleClose = () => {
     setOpen(false);
   };
-  // todo fetch all users
+
   useEffect(() => {
     async function getUsers() {
-      const users = await fetchUsers(user?.jwt);
+      const usersRes = await fetchAllUsers(user?.jwt);
 
-      if (users) {
-        setUsers(users.map((user) => ({ label: user.name, value: user.id })));
+      if (usersRes) {
+        setUsers(usersRes.map((u) => ({ label: u.name, value: u.id })));
         setIsLoading(false);
       }
     }
