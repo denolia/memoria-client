@@ -18,9 +18,11 @@ import { getUsernameInitials } from "../Auth/utils";
 import { fetchSpaceById } from "./api/fetchSpaceById";
 import InviteNewUserToSpaceDialog from "./InviteNewUserDialog";
 import type { SpaceDef } from "./types";
+import { LoadingBackdrop } from "../Common/LoadingBackdrop";
 
 export function ManageSpace() {
   const { spaceId } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [space, setSpace] = useState<SpaceDef | null>(null);
   const { user } = useAuth();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -34,30 +36,38 @@ export function ManageSpace() {
 
       if (spaceDef) {
         setSpace(spaceDef);
+        setIsLoading(false)
       }
     }
     getSpace();
   }, [spaceId]);
-  console.log(space);
+
+  if (isLoading){
+    return <LoadingBackdrop />
+  }
 
   return (
     <Container sx={{ mt: 2 }}>
       <Typography variant="h4" color="textSecondary">
-        Space
+        Space: {space?.name}
       </Typography>
+
+      {space?.description && <Typography variant="caption">{space.description}</Typography>}
 
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {space?.participants.map((participant) => (
-          <React.Fragment key={participant.username}>
+          <React.Fragment key={participant.name}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar sx={{ width: 32, height: 32 }}>
-                  {getUsernameInitials(participant?.username)}
+                  {getUsernameInitials(participant?.name)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={participant.username}
-                secondary={(space?.owner && space?.owner?.username === participant.username) ? "Owner" : "Participant"}
+                primary={participant.name}
+                secondary={
+                  space?.owner && space?.owner?.name === participant.name ? "Owner" : "Participant"
+                }
               />
             </ListItem>
 
