@@ -1,13 +1,14 @@
-import { Backdrop, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { requestLogin } from "./state/requestLogin";
 import { requestSignup } from "./state/requestSignup";
-import type { Space, User } from "./types";
+import type { LoginResponse, Space } from "./types";
+import { getUsernameInitials } from "./utils";
+import { LoadingBackdrop } from "../Common/LoadingBackdrop";
 
 interface AuthContext {
-  user: User | null;
+  user: LoginResponse | null;
   userInitials: string;
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -20,12 +21,6 @@ interface AuthContext {
 
 const Context = React.createContext<AuthContext | undefined>(undefined);
 
-function getInitials(name: string | null | undefined) {
-  if (!name) return "";
-
-  return `${name[0]?.toUpperCase()}`;
-}
-
 const deserializeCurrentSpace = (): Space | null => {
   const space = localStorage.getItem("memoria-current-space");
 
@@ -36,22 +31,22 @@ const serializeSpace = (currentSpace: Space) => {
   localStorage.setItem("memoria-current-space", JSON.stringify(currentSpace));
 };
 
-const deserializeUser = (): User | null => {
+const deserializeUser = (): LoginResponse | null => {
   const serializedUser = localStorage.getItem("memoria-user");
 
-  return serializedUser ? (JSON.parse(serializedUser) as User) : null;
+  return serializedUser ? (JSON.parse(serializedUser) as LoginResponse) : null;
 };
 
-const serializeUser = (userToStore: User) => {
+const serializeUser = (userToStore: LoginResponse) => {
   localStorage.setItem("memoria-user", JSON.stringify(userToStore));
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<LoginResponse | null>(null);
   const [currentSpace, setCurrentSpace] = useState<Space | null>(null);
   const navigate = useNavigate();
-  const userInitials = getInitials(user?.username);
+  const userInitials = getUsernameInitials(user?.username);
 
   useEffect(() => {
     const savedUser = deserializeUser();
@@ -133,13 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Context.Provider value={value}>
-      {loading ? (
-        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        children
-      )}
+      {loading ? <LoadingBackdrop  /> : children}
     </Context.Provider>
   );
 }
