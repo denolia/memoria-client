@@ -10,7 +10,7 @@ export function Copyright() {
         denolia
       </Link>
       &
-      <Link color="inherit" href="https://demoth.com/">
+      <Link color="inherit" href="https://demoth.dev/">
         demoth
       </Link>{" "}
       {new Date().getFullYear()}
