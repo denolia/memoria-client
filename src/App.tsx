@@ -6,7 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AppRoutes } from "./AppRoutes";
 import { AuthProvider } from "./Auth/AuthContext";
 import { SnackbarProvider } from "./Common/Notifications/SnackbarContext";
-import { ItemsProvider } from "./Items/state/ItemContext";
+import { ItemsProvider } from "./Items/ItemContext";
 
 export function App() {
   return (

@@ -3,7 +3,7 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Box, Stack } from "@mui/material";
 import React from "react";
 import { moveItem, reorder } from "../../helpers/reorder";
-import { useItems } from "../state/ItemContext";
+import { useItems } from "../ItemContext";
 import type { Item, Status } from "../types";
 import { Column } from "./Column";
 import type { BoardState } from "./types";

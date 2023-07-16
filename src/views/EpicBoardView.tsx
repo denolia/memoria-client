@@ -2,7 +2,7 @@ import React from "react";
 import { LoginRequired } from "../Auth/Login/helpers/LoginRequired";
 import { Board } from "../Items/Board/Board";
 import { ItemDrawer } from "../Items/Drawer/ItemDrawer";
-import { ItemDrawerProvider } from "../Items/state/ItemDrawerContext";
+import { ItemDrawerProvider } from "../Items/ItemDrawerContext";
 import { ItemType } from "../Items/types";
 
 const defaultItem = {

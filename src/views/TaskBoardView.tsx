@@ -4,8 +4,8 @@ import React, { useMemo, useState } from "react";
 import { LoginRequired } from "../Auth/Login/helpers/LoginRequired";
 import { Board } from "../Items/Board/Board";
 import { ItemDrawer } from "../Items/Drawer/ItemDrawer";
-import { useItems } from "../Items/state/ItemContext";
-import { ItemDrawerProvider } from "../Items/state/ItemDrawerContext";
+import { useItems } from "../Items/ItemContext";
+import { ItemDrawerProvider } from "../Items/ItemDrawerContext";
 import { ItemType, Status } from "../Items/types";
 
 const defaultItem = {

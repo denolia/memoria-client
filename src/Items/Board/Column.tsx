@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { useItemDrawer } from "../state/ItemDrawerContext";
+import { useItemDrawer } from "../ItemDrawerContext";
 import type { ColumnDef, Item } from "../types";
 import { DroppableArea } from "./DroppableArea";
 
