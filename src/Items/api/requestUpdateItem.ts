@@ -1,25 +1,12 @@
-import axios from "axios";
 import type { Space } from "../../Auth/types";
 import { API } from "../../environment";
 import type { Item } from "../types";
+import { executeRequest, Method } from "../../Common/executeRequest";
 
 export async function requestUpdateItem(
   item: Item,
   space: Space | null,
   token: string | undefined
 ) {
-  let res = null;
-  try {
-    res = await axios.post(
-      `${API}item`,
-      { ...item, space },
-      {
-        headers: { Authentication: `Bearer ${token}` },
-      }
-    );
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-  return res;
+  return executeRequest(Method.POST, `${API}item`, token, { ...item, space });
 }
