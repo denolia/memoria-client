@@ -101,12 +101,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     setCurrentSpace(space);
     serializeSpace(space);
+    navigate("/");
   };
 
   const switchSpace = (space: Space) => {
     if (space) {
       setCurrentSpace(space);
       serializeSpace(space);
+      navigate("/");
     }
   };
 
