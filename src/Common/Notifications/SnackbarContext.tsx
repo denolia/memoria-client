@@ -18,6 +18,9 @@ interface SnackData {
 
 export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   const [snacks, setSnacks] = useState<SnackData[]>([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState<SnackbarType>("success");
 
   const showSnackbar = useCallback((msg: string, typ: SnackbarType) => {
     // todo: add a queue of snackbars
