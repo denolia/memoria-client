@@ -1,6 +1,7 @@
 import type { AlertProps } from "@mui/material";
 import { Alert, Snackbar } from "@mui/material";
 import React, { useCallback, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 interface SnackbarsContext {
   showSnackbar: (message: string, type: SnackbarType) => void;
@@ -11,6 +12,7 @@ const Context = React.createContext<SnackbarsContext | undefined>(undefined);
 type SnackbarType = AlertProps["severity"];
 
 interface SnackData {
+  id: string;
   open: boolean;
   message: string;
   type: SnackbarType;
@@ -18,21 +20,20 @@ interface SnackData {
 
 export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   const [snacks, setSnacks] = useState<SnackData[]>([]);
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [type, setType] = useState<SnackbarType>("success");
 
   const showSnackbar = useCallback((msg: string, typ: SnackbarType) => {
-    // todo: add a queue of snackbars
-    setSnacks(snacks.concat({ open: true, message: msg, type: typ }));
+    setSnacks((existingSnacks) => [
+      ...existingSnacks,
+      { open: true, message: msg, type: typ, id: uuidv4() },
+    ]);
   }, []);
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (snackId: SnackData["id"], reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
+    setSnacks((existingSnacks) => existingSnacks.filter((snack) => snack.id !== snackId));
   };
 
   const value = { showSnackbar };
@@ -40,17 +41,19 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   return (
     <Context.Provider value={value}>
       {children}
-
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert onClose={handleClose} severity={type} sx={{ width: "100%" }}>
-          {message}
-        </Alert>
-      </Snackbar>
+      {snacks.map((snack) => (
+        <Snackbar
+          key={snack.id}
+          open={snack.open}
+          autoHideDuration={6000}
+          onClose={(_, reason) => handleClose(snack.id, reason)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Alert onClose={() => handleClose(snack.id)} severity={snack.type} sx={{ width: "100%" }}>
+            {snack.message}
+          </Alert>
+        </Snackbar>
+      ))}
     </Context.Provider>
   );
 }
