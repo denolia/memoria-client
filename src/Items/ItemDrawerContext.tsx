@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Item } from "../types";
+import type { Item } from "./types";
 
 interface ItemDrawerContext {
   editItem: Partial<Item>;

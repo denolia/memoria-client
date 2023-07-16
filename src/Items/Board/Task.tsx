@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import React from "react";
-import { useItems } from "../state/ItemContext";
+import { useItems } from "../ItemContext";
 import { Priority } from "../types";
 import type { Item } from "../types";
 import { ActionMenu } from "./ActionMenu";

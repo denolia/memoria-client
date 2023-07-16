@@ -15,10 +15,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useAuth } from "../Auth/AuthContext";
 import { getUsernameInitials } from "../Auth/utils";
-import { fetchSpaceById } from "./api/fetchSpaceById";
+import { requestSpaceById } from "./api/requestSpaceById";
 import InviteNewUserToSpaceDialog from "./InviteNewUserDialog";
 import type { SpaceDef } from "./types";
 import { LoadingBackdrop } from "../Common/LoadingBackdrop";
+import { LoginRequired } from "../Auth/Login/helpers/LoginRequired";
 
 export function ManageSpace() {
   const { spaceId } = useParams();
@@ -31,11 +32,11 @@ export function ManageSpace() {
     if (!spaceId) {
       return;
     }
-    const spaceDef = await fetchSpaceById(spaceId, user?.jwt);
+    const spaceDef = await requestSpaceById(spaceId, user?.jwt);
 
     if (spaceDef) {
       setSpace(spaceDef);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -43,53 +44,55 @@ export function ManageSpace() {
     getSpace();
   }, [spaceId]);
 
-  if (isLoading){
-    return <LoadingBackdrop />
+  if (isLoading) {
+    return <LoadingBackdrop />;
   }
 
   return (
-    <Container sx={{ mt: 2 }}>
-      <Typography variant="h4" color="textSecondary">
-        Space: {space?.name}
-      </Typography>
+    <LoginRequired>
+      <Container sx={{ mt: 2 }}>
+        <Typography variant="h4" color="textSecondary">
+          Space: {space?.name}
+        </Typography>
 
-      {space?.description && <Typography variant="caption">{space.description}</Typography>}
+        {space?.description && <Typography variant="caption">{space.description}</Typography>}
 
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        {space?.participants.map((participant) => (
-          <React.Fragment key={participant.name}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  {getUsernameInitials(participant?.name)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={participant.name}
-                secondary={
-                  space?.owner && space?.owner?.name === participant.name ? "Owner" : "Participant"
-                }
-              />
-            </ListItem>
+        <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+          {space?.participants.map((participant) => (
+            <React.Fragment key={participant.name}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar sx={{ width: 32, height: 32 }}>
+                    {getUsernameInitials(participant?.name)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={participant.name}
+                  secondary={
+                    space?.owner && space?.owner?.id === participant.id ? "Owner" : "Participant"
+                  }
+                />
+              </ListItem>
 
-            <Divider />
-          </React.Fragment>
-        ))}
+              <Divider />
+            </React.Fragment>
+          ))}
 
-        <ListItemButton onClick={() => setInviteModalOpen(true)}>
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText secondary="Invite new user…" />
-        </ListItemButton>
-      </List>
+          <ListItemButton onClick={() => setInviteModalOpen(true)}>
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText secondary="Invite new user…" />
+          </ListItemButton>
+        </List>
 
-      <InviteNewUserToSpaceDialog
-        space={space}
-        open={inviteModalOpen}
-        setOpen={setInviteModalOpen}
-        onChange={getSpace}
-      />
-    </Container>
+        <InviteNewUserToSpaceDialog
+          space={space}
+          open={inviteModalOpen}
+          setOpen={setInviteModalOpen}
+          onChange={getSpace}
+        />
+      </Container>
+    </LoginRequired>
   );
 }

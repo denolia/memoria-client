@@ -4,7 +4,7 @@ import { groupBy } from "../../helpers/notLodash";
 import { applyFilterCriteria } from "../filtering/filter";
 import type { FilterCriteria } from "../filtering/types";
 import { Operator } from "../filtering/types";
-import { useItems } from "../state/ItemContext";
+import { useItems } from "../ItemContext";
 import type { ColumnDef, IndexedItems } from "../types";
 import { Status } from "../types";
 import { DraggableBoard } from "./DraggableBoard";

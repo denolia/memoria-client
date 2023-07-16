@@ -11,6 +11,7 @@ import { Link as LinkRouter } from "react-router-dom";
 import { Copyright } from "../../Common/Copyright";
 import { useAuth } from "../AuthContext";
 import { LoginMode } from "./types";
+import { enqueueSnackbar } from "notistack";
 
 interface Props {
   mode: LoginMode;
@@ -33,7 +34,9 @@ export function LoginForm({ mode }: Props) {
       if (mode === LoginMode.SIGN_UP) {
         if (!promo) {
           setPromoError(true);
-
+          enqueueSnackbar("Please enter a promo code", {
+            variant: 'error',
+          });
           return;
         }
         signup(email, password, promo);
