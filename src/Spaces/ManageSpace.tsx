@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useAuth } from "../Auth/AuthContext";
 import { getUsernameInitials } from "../Auth/utils";
-import { fetchSpaceById } from "./api/fetchSpaceById";
+import { requestSpaceById } from "./api/requestSpaceById";
 import InviteNewUserToSpaceDialog from "./InviteNewUserDialog";
 import type { SpaceDef } from "./types";
 import { LoadingBackdrop } from "../Common/LoadingBackdrop";
@@ -31,7 +31,7 @@ export function ManageSpace() {
     if (!spaceId) {
       return;
     }
-    const spaceDef = await fetchSpaceById(spaceId, user?.jwt);
+    const spaceDef = await requestSpaceById(spaceId, user?.jwt);
 
     if (spaceDef) {
       setSpace(spaceDef);
