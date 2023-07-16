@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { requestLogin } from "./state/requestLogin";
-import { requestSignup } from "./state/requestSignup";
+import { requestLogin } from "./api/requestLogin";
+import { requestSignup } from "./api/requestSignup";
 import type { LoginResponse, Space } from "./types";
 import { getUsernameInitials } from "./utils";
 import { LoadingBackdrop } from "../Common/LoadingBackdrop";

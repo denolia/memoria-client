@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 import { useAuth } from "../Auth/AuthContext";
-import { requestAddNewSpace } from "../Auth/state/requestAddNewSpace";
+import { requestAddNewSpace } from "../Auth/api/requestAddNewSpace";
 
 interface Props {
   open: boolean;
