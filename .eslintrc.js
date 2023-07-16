@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "plugin:import/recommended", "airbnb", "prettier"],
+  extends: ["plugin:react/recommended", "plugin:@typescript-eslint/recommended", "plugin:import/recommended", "prettier"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -42,6 +42,7 @@ module.exports = {
     ],
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": "error",
+    "import/no-unresolved": "off",
     "import/extensions": [
       "error",
       "ignorePackages",

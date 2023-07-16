@@ -9,9 +9,9 @@ import type { FormEvent } from "react";
 import React from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import { Copyright } from "../../Common/Copyright";
-import { useSnackbar } from "../../Common/Notifications/SnackbarContext";
 import { useAuth } from "../AuthContext";
 import { LoginMode } from "./types";
+import { enqueueSnackbar } from "notistack";
 
 interface Props {
   mode: LoginMode;
@@ -19,7 +19,6 @@ interface Props {
 
 export function LoginForm({ mode }: Props) {
   const { login, signup } = useAuth();
-  const snackbar = useSnackbar();
   const [promoError, setPromoError] = React.useState(false);
   const theme = useTheme();
 
@@ -35,9 +34,9 @@ export function LoginForm({ mode }: Props) {
       if (mode === LoginMode.SIGN_UP) {
         if (!promo) {
           setPromoError(true);
-          snackbar.showSnackbar("Please enter a promo code", "error");
-          snackbar.showSnackbar("2", "error");
-          snackbar.showSnackbar("3", "error");
+          enqueueSnackbar("Please enter a promo code", {
+            variant: 'error',
+          });
           return;
         }
         signup(email, password, promo);

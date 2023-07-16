@@ -3,9 +3,9 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { SnackbarProvider } from "notistack";
 import { AppRoutes } from "./AppRoutes";
 import { AuthProvider } from "./Auth/AuthContext";
-import { SnackbarProvider } from "./Common/Notifications/SnackbarContext";
 import { ItemsProvider } from "./Items/ItemContext";
 
 export function App() {
