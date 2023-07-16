@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Auth/AuthContext";
 import { keyBy } from "../helpers/notLodash";
-import { ItemType } from "./types";
 import type { IndexedItems, Item } from "./types";
+import { ItemType } from "./types";
 import { requestDeleteItem } from "./api/requestDeleteItem";
 import { requestGetAllItems } from "./api/requestGetAllItems";
 import { requestUpdateItem } from "./api/requestUpdateItem";
@@ -30,7 +30,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
   const { user, isLoggedIn, currentSpace } = useAuth();
 
   const getAllItems = async () => {
-    const fetchedItems = await requestGetAllItems(currentSpace?.id, user?.jwt);
+    const fetchedItems = (await requestGetAllItems(currentSpace?.id, user?.jwt)) ?? [];
     const indexedItems = keyBy(fetchedItems, "id");
     const indexedEpics = keyBy(
       fetchedItems.filter((item) => item.type === ItemType.EPIC),
@@ -54,7 +54,7 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
   }, [isLoggedIn, currentSpace?.id]);
 
   const updateItem = async (updatedItem: Item) => {
-    const res = await requestUpdateItem(updatedItem, currentSpace, user?.jwt);
+    const res = await requestUpdateItem(updatedItem, updatedItem.space ?? currentSpace, user?.jwt);
 
     if (!res) {
       // todo add toast notification

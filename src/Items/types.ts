@@ -1,3 +1,5 @@
+import { Space } from "../Auth/types";
+
 export enum ItemType {
   TASK = "Task",
   EPIC = "Epic",
@@ -36,6 +38,7 @@ export interface Item {
     id: string;
   };
   parent?: ParentInfo | null;
+  space?: Space | null;
   description?: string | null;
   statusOrder: number;
   updated: string;

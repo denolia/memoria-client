@@ -13,6 +13,8 @@ import { useItems } from "../ItemContext";
 import { useItemDrawer } from "../ItemDrawerContext";
 import type { Item } from "../types";
 import { ItemType, Priority, Status } from "../types";
+import { useAuth } from "../../Auth/AuthContext";
+import { Space } from "../../Auth/types";
 
 interface Props {
   actionText: string;
@@ -22,6 +24,8 @@ export function ItemForm({ actionText }: Props) {
   const { setOpenDrawer, editItem } = useItemDrawer();
   const theme = useTheme();
   const { updateItem, epics } = useItems();
+  const { user } = useAuth();
+  const spaces = user?.userspaces ?? [];
 
   const [epic, setEpic] = useState(
     editItem.parent?.id
@@ -29,9 +33,19 @@ export function ItemForm({ actionText }: Props) {
       : null
   );
 
+  const [space, setSpace] = useState(
+    editItem.space?.id
+      ? { label: spaces.find(it => it.id === editItem.space?.id)?.name, value: editItem.space.id }
+      : null
+  );
+
   const epicsOptions = useMemo(
-    () => Object.values(epics).map((ep) => ({ label: ep.title, value: ep.id })),
+    () => Object.values(epics).map((ep: Item) => ({ label: ep.title, value: ep.id })),
     [epics]
+  );
+  const spaceOptions = useMemo(
+    () => Object.values(spaces).map((sp: Space) => ({ label: sp.name, value: sp.id })),
+    [spaces]
   );
 
   const datePickerRef = useRef<HTMLInputElement | null>(null);
@@ -54,6 +68,7 @@ export function ItemForm({ actionText }: Props) {
     const newItem = {
       type: type ?? ItemType.TASK,
       parent: epic?.value ? { id: epic.value } : null,
+      space: space?.value ? { id: space.value } : null,
       title,
       description,
       priority: priority ?? Priority.LOW,
@@ -109,6 +124,15 @@ export function ItemForm({ actionText }: Props) {
           options={epicsOptions}
           sx={{ mt: 1 }}
           renderInput={(params) => <TextField {...params} label="Epic" />}
+        />
+
+        <Autocomplete
+          id="parent"
+          value={space}
+          onChange={(_, newValue) => setSpace(newValue)}
+          options={spaceOptions}
+          sx={{ mt: 1 }}
+          renderInput={(params) => <TextField {...params} label="Space" />}
         />
 
         <FormControl fullWidth sx={{ mt: 1 }}>
