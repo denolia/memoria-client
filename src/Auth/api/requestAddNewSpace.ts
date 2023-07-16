@@ -1,19 +1,6 @@
-import axios from "axios";
 import { API } from "../../environment";
+import { executeRequest, Method } from "../../Common/executeRequest";
 
-export async function requestAddNewSpace(spaceName: string, token: string | undefined) {
-  let res = null;
-  try {
-    res = await axios.post(
-      `${API}space`,
-      { name: spaceName },
-      {
-        headers: { Authentication: `Bearer ${token}` },
-      }
-    );
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-  return res;
+export function requestAddNewSpace(spaceName: string, token: string | undefined) {
+  return executeRequest(Method.POST, `${API}space`, token, { name: spaceName });
 }

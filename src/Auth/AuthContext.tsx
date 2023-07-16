@@ -82,9 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (space) {
         serializeSpace(space);
       }
+      navigate("/");
     }
-
-    navigate("/");
   };
 
   const signup = async (email: string, password: string, promo: string) => {

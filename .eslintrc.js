@@ -33,6 +33,7 @@ module.exports = {
     },
   },
   rules: {
+    "no-console": "warn",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
     "no-unused-vars": ["off"],
