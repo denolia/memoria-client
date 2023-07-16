@@ -7,6 +7,7 @@ export enum Method {
   POST = "post",
   PUT = "put",
   DELETE = "delete",
+  PATCH = "patch",
 }
 
 export async function executeRequest<T = any, D = any>(
@@ -18,10 +19,20 @@ export async function executeRequest<T = any, D = any>(
 ): Promise<AxiosResponse<T> | null> {
   let res = null;
   try {
-    res = await axios[method](url, {
-      ...config,
-      headers: { ...config?.headers, ...(token ? { Authentication: `Bearer ${token}` } : {}) },
-    });
+    const methodsWithData = [Method.POST, Method.PUT, Method.PATCH];
+
+    const headers = { ...config?.headers, ...(token ? { Authentication: `Bearer ${token}` } : {}) };
+    if (methodsWithData.includes(method)) {
+      res = await axios[method](url, data, {
+        ...config,
+        headers,
+      });
+    } else {
+      res = await axios[method](url, {
+        ...config,
+        headers,
+      });
+    }
   } catch (e) {
     console.error(e);
     enqueueSnackbar((e as Error)?.message ?? `${e}`, {
