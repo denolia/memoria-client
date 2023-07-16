@@ -1,5 +1,5 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 
 export enum Method {
@@ -35,9 +35,14 @@ export async function executeRequest<T = any, D = any>(
     }
   } catch (e) {
     console.error(e);
-    enqueueSnackbar((e as Error)?.message ?? `${e}`, {
-      variant: "error",
-    });
+    enqueueSnackbar(
+      (e as AxiosError<{ message: string }>).response?.data?.message ??
+        (e as Error)?.message ??
+        `${e}`,
+      {
+        variant: "error",
+      }
+    );
   }
   return res;
 }
