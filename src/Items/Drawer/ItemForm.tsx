@@ -127,7 +127,7 @@ export function ItemForm({ actionText }: Props) {
         />
 
         <Autocomplete
-          id="parent"
+          id="space"
           value={space}
           onChange={(_, newValue) => setSpace(newValue)}
           options={spaceOptions}
